@@ -36,10 +36,10 @@ const homepageData = {
   templates_section: {
     heading: 'Explore Modern Resume Templates',
     templates: [
-      { name: 'Modern', image: '/templates/modern.png' },
-      { name: 'Creative', image: '/templates/creative.png' },
-      { name: 'Minimalist', image: '/templates/minimalist.png' },
-      { name: 'Professional', image: '/templates/professional.png' },
+      { name: 'Modern', image: 'https://raw.githubusercontent.com/RushendraNuthi/CVScriptly-AI/main/public/templates/modern.png' },
+      { name: 'Creative', image: 'https://raw.githubusercontent.com/RushendraNuthi/CVScriptly-AI/main/public/templates/creative.png' },
+      { name: 'Minimalist', image: 'https://raw.githubusercontent.com/RushendraNuthi/CVScriptly-AI/main/public/templates/minimalist.png' },
+      { name: 'Professional', image: 'https://raw.githubusercontent.com/RushendraNuthi/CVScriptly-AI/main/public/templates/professional.png' },
     ],
   },
   faq_section: {
@@ -191,12 +191,11 @@ export default function Home() {
                   className="group relative overflow-hidden rounded-lg border bg-card shadow-sm transition-transform hover:scale-105"
                 >
                   <Image
-                    src={`https://picsum.photos/seed/${template.name}/600/800`}
+                    src={template.image}
                     alt={`${template.name} resume template`}
                     width={600}
                     height={800}
                     className="object-cover object-top"
-                    data-ai-hint={`${template.name} resume`}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                   <div className="absolute bottom-0 left-0 p-4">
