@@ -81,6 +81,25 @@ export function SummaryForm({ data, onUpdate }: SummaryFormProps) {
   return (
     <Form {...form}>
       <div className="space-y-6">
+        <FormField
+          control={form.control}
+          name="summary"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Your Professional Summary</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="A concise and engaging summary of your professional background."
+                  {...field}
+                  onBlur={() => onUpdate({ summary: field.value })}
+                  rows={6}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="p-6 border rounded-lg bg-card space-y-4">
           <h3 className="font-headline text-lg font-semibold">
             AI Summary Generator
@@ -148,25 +167,6 @@ export function SummaryForm({ data, onUpdate }: SummaryFormProps) {
             </span>
           </Button>
         </div>
-
-        <FormField
-          control={form.control}
-          name="summary"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Your Professional Summary</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="A concise and engaging summary of your professional background."
-                  {...field}
-                  onBlur={() => onUpdate({ summary: field.value })}
-                  rows={6}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
       </div>
     </Form>
   );
