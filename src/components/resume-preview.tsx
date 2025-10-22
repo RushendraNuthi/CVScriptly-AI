@@ -12,14 +12,16 @@ type ResumePreviewProps = {
 
 export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewProps) {
   const asideClass = isMobilePreview 
-    ? "w-full bg-muted/30 p-4"
-    : "sticky top-20 h-fit max-h-[calc(100vh-6rem)] w-full overflow-y-auto lg:block hidden bg-muted/30 p-8";
+    ? "w-full"
+    : "sticky top-20 h-fit max-h-[calc(100vh-6rem)] w-full overflow-y-auto lg:block hidden p-8";
 
-  const previewClass = "w-[210mm] min-h-[297mm] bg-card shadow-lg origin-top-left lg:origin-top";
+  const previewContainerClass = "w-full bg-muted/30";
+
+  const previewClass = "w-[210mm] min-h-[297mm] bg-card shadow-lg origin-top";
 
   if (!data) {
     return (
-      <aside className={asideClass}>
+      <aside className={cn(asideClass, previewContainerClass)}>
         <div className="w-full aspect-[210/297] bg-card shadow-lg p-8 flex items-center justify-center">
             <p className="text-center text-muted-foreground">
               Your resume will appear here as you fill out the form.
@@ -63,19 +65,29 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
   const currentTemplate = templateClasses[data.design.template as keyof typeof templateClasses] || templateClasses.classic;
 
   return (
-    <aside className={asideClass}>
+    <aside className={cn(asideClass, !isMobilePreview ? previewContainerClass : '')}>
       <div className="w-full aspect-[210/297] relative">
         <div
           id="resume-preview-content"
-          className={cn(previewClass, "absolute w-[210mm] h-[297mm] transform scale-[var(--scale-factor)]")}
+          className={cn(previewClass, "absolute w-full h-full transform scale-[var(--scale-factor)]")}
           style={{
             ...dynamicStyles,
-            '--scale-factor': isMobilePreview ? '0.35' : '0.55',
+            '--scale-factor': isMobilePreview ? '1' : '1',
            } as any}
         >
           <div className={`p-[20mm] font-[var(--preview-font-family)] ${textClass}`}>
             <style>
               {`
+                #resume-preview-content {
+                  --scale-factor: 1; /* Default scale */
+                }
+                #resume-preview-container {
+                   --container-width: 100%;
+                   --resume-width: 210mm;
+                   --scale: calc(var(--container-width) / var(--resume-width));
+                   transform: scale(var(--scale));
+                   transform-origin: top left;
+                }
                 #resume-preview-content .text-primary { color: hsl(var(--preview-primary-color)); }
                 #resume-preview-content .border-primary { border-color: hsl(var(--preview-primary-color)); }
                 #resume-preview-content .border-primary\\/20 { border-color: hsl(var(--preview-primary-color) / 0.2); }
@@ -89,14 +101,6 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
                     background-color: hsl(var(--preview-primary-color)); 
                     margin-top: 4px;
                   }` : ''}
-                
-                @media (min-width: 375px) { #resume-preview-content { --scale-factor: ${isMobilePreview ? 0.45 : 0.65}; } }
-                @media (min-width: 425px) { #resume-preview-content { --scale-factor: ${isMobilePreview ? 0.52 : 0.75}; } }
-                @media (min-width: 768px) { #resume-preview-content { --scale-factor: ${isMobilePreview ? 0.9 : 0.8}; } }
-                @media (min-width: 1024px) { #resume-preview-content { --scale-factor: 0.55; } }
-                @media (min-width: 1280px) { #resume-preview-content { --scale-factor: 0.65; } }
-                @media (min-width: 1440px) { #resume-preview-content { --scale-factor: 0.75; } }
-                @media (min-width: 1536px) { #resume-preview-content { --scale-factor: 0.8; } }
               `}
             </style>
             <header className={currentTemplate.header}>
