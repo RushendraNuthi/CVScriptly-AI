@@ -36,10 +36,10 @@ const homepageData = {
   templates_section: {
     heading: 'Explore Modern Resume Templates',
     templates: [
-      { name: 'Modern', image: 'https://raw.githubusercontent.com/RushendraNuthi/CVScriptly-AI/main/public/templates/modern.png' },
-      { name: 'Creative', image: 'https://static.wixstatic.com/media/17a144_a3d8f247bcd84be9829c1d40cd013958~mv2.png/v1/fill/w_480,h_480,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/17a144_a3d8f247bcd84be9829c1d40cd013958~mv2.png' },
-      { name: 'Minimalist', image: 'https://raw.githubusercontent.com/RushendraNuthi/CVScriptly-AI/main/public/templates/minimalist.png' },
-      { name: 'Professional', image: 'https://raw.githubusercontent.com/RushendraNuthi/CVScriptly-AI/main/public/templates/professional.png' },
+      { name: 'Modern', image: 'https://static.wixstatic.com/media/17a144_a3d8f247bcd84be9829c1d40cd013958~mv2.png/v1/fill/w_480,h_480,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/17a144_a3d8f247bcd84be9829c1d40cd013958~mv2.png' },
+      { name: 'Creative', image: 'https://resumeworded.com/assets/images/resume-guides/financial-data-analyst.png' },
+      { name: 'Minimalist', image: 'https://tint.creativemarket.com/DxYyLbdoYlStPfJRviF1wnXx8b_wwRFc4mX3kYmXq9Q/width:1200/height:800/gravity:nowe/rt:fill-down/el:1/czM6Ly9maWxlcy5jcmVhdGl2ZW1hcmtldC5jb20vaW1hZ2VzL3NjcmVlbnNob3RzL3Byb2R1Y3RzLzIyMjQvMjIyNDAvMjIyNDAzNjgvcHJldmlldy0xLW8uanBn?1682665921' },
+      { name: 'Professional', image: 'https://i.pinimg.com/736x/90/3a/ff/903aff0006453febf4c58ff057321019.jpg' },
     ],
   },
   faq_section: {
@@ -284,3 +284,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
