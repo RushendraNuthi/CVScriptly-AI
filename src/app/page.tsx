@@ -48,42 +48,42 @@ const homepageData = {
       {
         question: 'What is an ATS-compliant resume?',
         answer:
-          'An ATS-compliant resume is formatted to be easily parsed by Applicant Tracking Systems. CVScriptly AI ensures your resume has a clean design and standard fonts, readable by most ATS software.',
+          "An ATS-compliant resume is one I've designed to be easily parsed by Applicant Tracking Systems. I ensure that CVScriptly AI templates use clean designs and standard fonts that are readable by most ATS software.",
       },
       {
         question: 'How does CVScriptly AI use AI?',
         answer:
-          'CVScriptly AI uses generative AI to help you write professional summaries, generate quantifiable bullet points from your job descriptions, and suggest relevant keywords to include in your resume based on a job posting.',
+          'I use generative AI to help you write professional summaries, create quantifiable bullet points from your job descriptions, and suggest relevant keywords to include in your resume based on a job posting.',
       },
       {
         question: 'Is my data secure?',
         answer:
-          "Yes. Your data is stored only in your browser's session storage and is automatically deleted when you close the tab. We do not have a database, and your information never leaves your computer.",
+          "Yes. I've built this tool to be privacy-first. Your data is stored only in your browser's session storage and is automatically deleted when you close the tab. I don't have a database, so your information never leaves your computer.",
       },
       {
         question: 'Can I export my resume to PDF/DOCX?',
         answer:
-          'Currently, you can export your resume as a PDF. We are working on adding DOCX and TXT export options in a future update.',
+          'Currently, you can export your resume as a PDF. I am working on adding DOCX and TXT export options in a future update.',
       },
       {
         question: 'What is open-source about the project?',
         answer:
-          'The entire codebase for CVScriptly AI is available on GitHub. You can view, modify, and even contribute to the project. We believe in transparency and community collaboration.',
+          'The entire codebase for CVScriptly AI is available on GitHub. You can view, modify, and even contribute to the project. I believe in transparency and community collaboration.',
       },
       {
         question: 'Can I import data from LinkedIn or Google?',
         answer:
-          'This feature is on our roadmap. We plan to allow users to import their professional data from platforms like LinkedIn to make the resume-building process even faster.',
+          'This feature is on my roadmap. I plan to allow users to import their professional data from platforms like LinkedIn to make the resume-building process even faster.',
       },
       {
         question: 'Is CVScriptly AI really free?',
         answer:
-          'Yes, CVScriptly AI is completely free to use. As an open-source project, our goal is to provide a powerful resume-building tool that is accessible to everyone.',
+          'Yes, CVScriptly AI is completely free to use. As an open-source project, my goal is to provide a powerful resume-building tool that is accessible to everyone.',
       },
       {
         question: 'Can I choose different resume templates?',
         answer:
-          'Absolutely! We offer a selection of professionally designed, ATS-friendly templates. You can switch between them at any time to see which one best fits your style and industry.',
+          'Absolutely! I offer a selection of professionally designed, ATS-friendly templates. You can switch between them at any time to see which one best fits your style and industry.',
       },
     ],
   },
