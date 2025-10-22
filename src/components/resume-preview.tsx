@@ -74,7 +74,7 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
           </section>
         )}
 
-        {experience.length > 0 && (
+        {experience?.length > 0 && (
           <section className="mb-6">
             <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
               Work Experience
@@ -99,7 +99,7 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
           </section>
         )}
 
-        {projects.length > 0 && (
+        {projects?.length > 0 && (
           <section className="mb-6">
             <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
               Projects
@@ -121,7 +121,7 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
           </section>
         )}
 
-        {education.length > 0 && (
+        {education?.length > 0 && (
           <section className="mb-6">
             <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
               Education
@@ -141,7 +141,7 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
           </section>
         )}
         
-        {certifications.length > 0 && (
+        {certifications?.length > 0 && (
           <section className="mb-6">
             <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
               Certifications
@@ -158,7 +158,7 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
           </section>
         )}
 
-        {skills.length > 0 && (
+        {skills?.length > 0 && (
           <section>
             <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
               Skills
