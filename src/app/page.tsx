@@ -57,7 +57,7 @@ const homepageData = {
       {
         question: 'Is my data secure?',
         answer:
-          'Yes. Your data is stored only in your browser\'s session storage and is automatically deleted when you close the tab. We do not have a database, and your information never leaves your computer.',
+          "Yes. Your data is stored only in your browser's session storage and is automatically deleted when you close the tab. We do not have a database, and your information never leaves your computer.",
       },
       {
         question: 'Can I export my resume to PDF/DOCX?',
@@ -114,6 +114,7 @@ const homepageData = {
   },
   footer: {
     copyright: '© 2025 CVScriptly AI. All Rights Reserved.',
+    repo_url: 'https://github.com/RushendraNuthi/CVScriptly-AI',
   },
 };
 
@@ -264,10 +265,17 @@ export default function Home() {
       </main>
 
       <footer className="border-t">
-        <div className="container flex h-16 items-center justify-center">
-          <p className="text-sm text-muted-foreground">
+        <div className="container flex flex-col sm:flex-row h-auto sm:h-20 items-center justify-between py-4 sm:py-0">
+          <p className="text-sm text-muted-foreground text-center sm:text-left">
             {footer.copyright}
           </p>
+          <div className="flex items-center gap-4 mt-4 sm:mt-0">
+            <a href={footer.repo_url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary flex items-center gap-2">
+              <Github className="h-4 w-4" />
+              <span>Source code on GitHub</span>
+            </a>
+            <p className="text-sm text-muted-foreground">Open contributions are welcome!</p>
+          </div>
         </div>
       </footer>
     </div>
