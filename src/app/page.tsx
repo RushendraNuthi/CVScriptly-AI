@@ -9,7 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Github, Linkedin, Mail, FileText, Globe } from 'lucide-react';
-import { Logo } from '@/components/icons';
+import { Logo, ProfileAvatar } from '@/components/icons';
 import Image from 'next/image';
 
 const homepageData = {
@@ -237,7 +237,10 @@ export default function Home() {
             <h2 className="font-headline text-3xl font-bold">
               {about_developer_section.heading}
             </h2>
-            <div className="mt-8 rounded-lg border bg-card p-8 shadow-sm">
+            <div className="mt-8 rounded-lg border bg-card p-8 shadow-sm flex flex-col items-center">
+              <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center mb-4">
+                <ProfileAvatar className="w-16 h-16 text-muted-foreground" />
+              </div>
               <h3 className="font-headline text-2xl font-semibold">
                 {about_developer_section.developer.name}
               </h3>
