@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Github, Linkedin, Mail, FileText } from 'lucide-react';
+import { ArrowRight, Github, Linkedin, Mail, FileText, Globe } from 'lucide-react';
 import { Logo } from '@/components/icons';
 import Image from 'next/image';
 
@@ -92,8 +92,8 @@ const homepageData = {
     developer: {
       name: 'Rushendra Nuthi',
       bio: 'A passionate Computer Science & Cybersecurity student focused on building full-stack apps and security tools. Google Cybersecurity Certified. Loves Python, Flask, ML, and secure coding. Dedicated to developing open-source, user-centric digital solutions.',
-      resume_pdf_url:
-        'https://rushendranuthi.netlify.app/assets/Rushendra_Nuthi_Resume-CeHdnWLJ.pdf',
+      portfolio_url:
+        'https://rushendranuthi.netlify.app/',
     },
     contact_links: [
       {
@@ -254,9 +254,9 @@ export default function Home() {
                   </Button>
                 ))}
                  <Button variant="outline" asChild>
-                    <a href={about_developer_section.developer.resume_pdf_url} target="_blank" rel="noopener noreferrer">
-                      <FileText className="mr-2 h-4 w-4" />
-                      Resume
+                    <a href={about_developer_section.developer.portfolio_url} target="_blank" rel="noopener noreferrer">
+                      <Globe className="mr-2 h-4 w-4" />
+                      Portfolio
                     </a>
                   </Button>
               </div>
