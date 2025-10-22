@@ -29,7 +29,7 @@ type DesignFormProps = {
 };
 
 export const templates: { name: string, design: Design }[] = [
-  { name: 'Classic', design: { template: 'classic', fontFamily: 'PT Sans', fontSize: '11px', primaryColor: '216 45% 30%' } },
+  { name: 'Classic', design: { template: 'classic', fontFamily: 'PT Sans', fontSize: '11px', primaryColor: '210 14% 23%' } },
   { name: 'Modern', design: { template: 'modern', fontFamily: 'Poppins', fontSize: '10px', primaryColor: '210 14% 23%' } },
   { name: 'Creative', design: { template: 'creative', fontFamily: 'Verdana', fontSize: '11px', primaryColor: '15 79% 55%' } },
 ];
@@ -44,11 +44,11 @@ const fontSizes = [
 ];
 const colorSwatches = [
   { name: 'Default', value: '216 45% 30%' },
+  { name: 'Black', value: '210 14% 23%' },
   { name: 'Emerald', value: '158 41% 30%' },
   { name: 'Ruby', value: '0 72% 51%' },
   { name: 'Sapphire', value: '217 89% 61%' },
   { name: 'Amethyst', value: '271 76% 53%' },
-  { name: 'Graphite', value: '210 14% 23%' },
 ];
 
 export function DesignForm({ data, onUpdate }: DesignFormProps) {
