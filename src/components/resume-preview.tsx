@@ -6,9 +6,14 @@ import { Mail, Phone, Linkedin, Globe, MapPin } from 'lucide-react';
 
 type ResumePreviewProps = {
   data: ResumeData | null;
+  isMobilePreview?: boolean;
 };
 
-export function ResumePreview({ data }: ResumePreviewProps) {
+export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewProps) {
+  const previewClass = isMobilePreview 
+    ? "w-full text-sm"
+    : "sticky top-20 h-fit max-h-[calc(100vh-6rem)] w-full overflow-y-auto rounded-lg bg-card shadow-sm lg:block hidden text-sm";
+
   if (!data) {
     return (
       <aside className="sticky top-20 h-[calc(100vh-6rem)] w-full rounded-lg bg-card shadow-sm lg:block hidden p-8">
@@ -24,14 +29,14 @@ export function ResumePreview({ data }: ResumePreviewProps) {
   return (
     <aside
       id="resume-preview-content"
-      className="sticky top-20 h-fit max-h-[calc(100vh-6rem)] w-full overflow-y-auto rounded-lg bg-card shadow-sm lg:block hidden text-sm"
+      className={previewClass}
     >
       <div className="p-8 md:p-12">
         <header className="text-center mb-6">
-          <h2 className="font-headline text-4xl font-bold text-primary tracking-tight">
+          <h2 className="font-headline text-3xl md:text-4xl font-bold text-primary tracking-tight">
             {personalInfo.name || 'Your Name'}
           </h2>
-          <div className="flex justify-center items-center flex-wrap gap-x-4 gap-y-1 text-muted-foreground mt-2">
+          <div className="flex justify-center items-center flex-wrap gap-x-4 gap-y-1 text-muted-foreground mt-2 text-xs md:text-sm">
             {personalInfo.location && (
               <span className="flex items-center gap-1.5">
                 <MapPin size={12} /> {personalInfo.location}
@@ -76,9 +81,9 @@ export function ResumePreview({ data }: ResumePreviewProps) {
             </h3>
             {experience.map((exp) => (
               <div key={exp.id} className="mb-4">
-                <div className="flex justify-between items-baseline">
+                <div className="flex justify-between items-baseline flex-wrap">
                   <h4 className="font-bold text-base">{exp.role || "Role"}</h4>
-                  <span className="text-muted-foreground text-xs">
+                  <span className="text-muted-foreground text-xs shrink-0">
                     {exp.startDate || 'Start Date'} - {exp.endDate || 'End Date'}
                   </span>
                 </div>
@@ -101,9 +106,9 @@ export function ResumePreview({ data }: ResumePreviewProps) {
             </h3>
             {education.map((edu) => (
               <div key={edu.id} className="mb-3">
-                <div className="flex justify-between items-baseline">
+                <div className="flex justify-between items-baseline flex-wrap">
                   <h4 className="font-bold text-base">{edu.institution || "Institution"}</h4>
-                  <span className="text-muted-foreground text-xs">
+                  <span className="text-muted-foreground text-xs shrink-0">
                     {edu.startDate || 'Start'} - {edu.endDate || 'End'}
                   </span>
                 </div>
@@ -119,7 +124,13 @@ export function ResumePreview({ data }: ResumePreviewProps) {
             <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
               Skills
             </h3>
-            <p className="text-foreground/80">{skills.join(' | ')}</p>
+            <div className="flex flex-wrap gap-x-2 gap-y-1">
+              {skills.map((skill, index) => (
+                <span key={index} className="text-foreground/80">
+                  {skill}{index < skills.length - 1 && ' |'}
+                </span>
+              ))}
+            </div>
           </section>
         )}
       </div>

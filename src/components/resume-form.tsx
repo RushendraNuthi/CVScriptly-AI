@@ -13,6 +13,7 @@ import { ExperienceForm } from '@/components/form/experience-form';
 import { EducationForm } from '@/components/form/education-form';
 import { SkillsForm } from '@/components/form/skills-form';
 import { KeywordSuggester } from '@/components/keyword-suggester';
+import { ResumePreview } from '@/components/resume-preview';
 
 type ResumeFormProps = {
   data: ResumeData;
@@ -23,13 +24,14 @@ export function ResumeForm({ data, onUpdate }: ResumeFormProps) {
   return (
     <section>
       <Tabs defaultValue="personal" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 md:grid-cols-6 mb-4 h-auto">
+        <TabsList className="grid w-full grid-cols-4 md:grid-cols-7 mb-4 h-auto">
           <TabsTrigger value="personal">Personal</TabsTrigger>
           <TabsTrigger value="summary">Summary</TabsTrigger>
           <TabsTrigger value="experience">Experience</TabsTrigger>
           <TabsTrigger value="education">Education</TabsTrigger>
           <TabsTrigger value="skills">Skills</TabsTrigger>
           <TabsTrigger value="tools">Tools</TabsTrigger>
+          <TabsTrigger value="preview" className="lg:hidden">Preview</TabsTrigger>
         </TabsList>
 
         <div className="p-0.5">
@@ -50,6 +52,11 @@ export function ResumeForm({ data, onUpdate }: ResumeFormProps) {
           </TabsContent>
           <TabsContent value="tools">
             <KeywordSuggester />
+          </TabsContent>
+           <TabsContent value="preview" className="lg:hidden">
+            <div className="bg-card rounded-lg shadow-sm">
+              <ResumePreview data={data} isMobilePreview />
+            </div>
           </TabsContent>
         </div>
       </Tabs>
