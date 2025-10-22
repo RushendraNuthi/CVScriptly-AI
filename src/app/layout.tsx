@@ -4,8 +4,33 @@ import './globals.css';
 import './print.css';
 
 export const metadata: Metadata = {
-  title: 'CVScriptly AI',
-  description: 'Build your ATS-friendly resume with the power of AI.',
+  title: 'CVScriptly AI - Free AI-Powered Resume Builder',
+  description: 'Build and download professional, ATS-friendly resumes for free. CVScriptly AI uses generative AI to help you write compelling summaries and bullet points.',
+  keywords: 'resume builder, free resume builder, AI resume builder, cv maker, ATS-friendly resume, professional resume, job application, resume template',
+  authors: [{ name: 'Rushendra Nuthi' }],
+  openGraph: {
+    title: 'CVScriptly AI - Free AI-Powered Resume Builder',
+    description: 'Craft job-winning resumes with the power of AI. Privacy-first and open-source.',
+    url: 'https://cvscriptly-ai.netlify.app/',
+    siteName: 'CVScriptly AI',
+    images: [
+      {
+        url: 'https://static.wixstatic.com/media/17a144_a3d8f247bcd84be9829c1d40cd013958~mv2.png',
+        width: 480,
+        height: 480,
+        alt: 'CVScriptly AI Logo',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CVScriptly AI - Free AI-Powered Resume Builder',
+    description: 'Build professional, ATS-optimized resumes for free with AI-powered suggestions. Open-source and privacy-focused.',
+    creator: '@Rushendra_Nuthi',
+    images: ['https://static.wixstatic.com/media/17a144_a3d8f247bcd84be9829c1d40cd013958~mv2.png'],
+  },
 };
 
 export default function RootLayout({
