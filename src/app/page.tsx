@@ -1,5 +1,275 @@
-import CVBuilder from '@/components/cv-builder';
+import Link from 'next/link';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ArrowRight, Github, Linkedin, Mail, FileText } from 'lucide-react';
+import { Logo } from '@/components/icons';
+import Image from 'next/image';
+
+const homepageData = {
+  hero_section: {
+    title: 'CVScriptly AI',
+    subtitle: 'Craft ATS-Optimized Resumes with AI Precision',
+    description:
+      'Build your resume smarter and faster—open source, privacy-first, future-ready.',
+    features: [
+      'Resume Builder',
+      'CV Maker',
+      'ATS-Friendly',
+      'AI Suggestions',
+      'Professional Templates',
+      'Job Winning Resumes',
+      'Easy to Use',
+      'Free Download',
+    ],
+    primary_cta: {
+      text: 'Build My Resume',
+      url: '/build',
+    },
+  },
+  templates_section: {
+    heading: 'Explore Modern Resume Templates',
+    templates: [
+      { name: 'Modern', image: '/templates/modern.png' },
+      { name: 'Creative', image: '/templates/creative.png' },
+      { name: 'Minimalist', image: '/templates/minimalist.png' },
+      { name: 'Professional', image: '/templates/professional.png' },
+    ],
+  },
+  faq_section: {
+    heading: 'Frequently Asked Questions',
+    questions: [
+      {
+        question: 'What is an ATS-compliant resume?',
+        answer:
+          'An ATS-compliant resume is formatted to be easily parsed by Applicant Tracking Systems. CVScriptly AI ensures your resume has a clean design and standard fonts, readable by most ATS software.',
+      },
+      {
+        question: 'How does CVScriptly AI use AI?',
+        answer:
+          'CVScriptly AI uses generative AI to help you write professional summaries, generate quantifiable bullet points from your job descriptions, and suggest relevant keywords to include in your resume based on a job posting.',
+      },
+      {
+        question: 'Is my data secure?',
+        answer:
+          'Yes. Your data is stored only in your browser\'s session storage and is automatically deleted when you close the tab. We do not have a database, and your information never leaves your computer.',
+      },
+      {
+        question: 'Can I export my resume to PDF/DOCX?',
+        answer:
+          'Currently, you can export your resume as a PDF. We are working on adding DOCX and TXT export options in a future update.',
+      },
+      {
+        question: 'What is open-source about the project?',
+        answer:
+          'The entire codebase for CVScriptly AI is available on GitHub. You can view, modify, and even contribute to the project. We believe in transparency and community collaboration.',
+      },
+      {
+        question: 'Can I import data from LinkedIn or Google?',
+        answer:
+          'This feature is on our roadmap. We plan to allow users to import their professional data from platforms like LinkedIn to make the resume-building process even faster.',
+      },
+      {
+        question: 'Is CVScriptly AI really free?',
+        answer:
+          'Yes, CVScriptly AI is completely free to use. As an open-source project, our goal is to provide a powerful resume-building tool that is accessible to everyone.',
+      },
+      {
+        question: 'Can I choose different resume templates?',
+        answer:
+          'Absolutely! We offer a selection of professionally designed, ATS-friendly templates. You can switch between them at any time to see which one best fits your style and industry.',
+      },
+    ],
+  },
+  about_developer_section: {
+    heading: 'About the Developer',
+    developer: {
+      name: 'Rushendra Nuthi',
+      bio: 'A passionate Computer Science & Cybersecurity student focused on building full-stack apps and security tools. Google Cybersecurity Certified. Loves Python, Flask, ML, and secure coding. Dedicated to developing open-source, user-centric digital solutions.',
+      resume_pdf_url:
+        'https://rushendranuthi.netlify.app/assets/Rushendra_Nuthi_Resume-CeHdnWLJ.pdf',
+    },
+    contact_links: [
+      {
+        label: 'GitHub',
+        url: 'https://github.com/RushendraNuthi',
+        icon: Github,
+      },
+      {
+        label: 'LinkedIn',
+        url: 'https://linkedin.com/in/rushendranuthi13',
+        icon: Linkedin,
+      },
+      {
+        label: 'Email',
+        url: 'mailto:rushendra.nuthi123@gmail.com',
+        icon: Mail,
+      },
+    ],
+  },
+  footer: {
+    copyright: '© 2025 CVScriptly AI. All Rights Reserved.',
+  },
+};
 
 export default function Home() {
-  return <CVBuilder />;
+  const {
+    hero_section,
+    templates_section,
+    faq_section,
+    about_developer_section,
+    footer,
+  } = homepageData;
+
+  return (
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <Logo className="h-8 w-8" />
+            <span className="font-headline text-xl font-semibold text-primary">
+              {hero_section.title}
+            </span>
+          </Link>
+          <Button asChild>
+            <Link href={hero_section.primary_cta.url}>
+              {hero_section.primary_cta.text}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </header>
+
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="py-20 md:py-32">
+          <div className="container text-center">
+            <h1 className="font-headline text-4xl font-extrabold tracking-tight lg:text-6xl text-primary">
+              {hero_section.title}
+            </h1>
+            <h2 className="mt-4 font-headline text-2xl font-semibold tracking-tight md:text-3xl">
+              {hero_section.subtitle}
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
+              {hero_section.description}
+            </p>
+            <div className="mt-8 flex justify-center">
+              <Button asChild size="lg">
+                <Link href={hero_section.primary_cta.url}>
+                  {hero_section.primary_cta.text}
+                  <ArrowRight className="ml-2" />
+                </Link>
+              </Button>
+            </div>
+            <div className="mt-12 flex flex-wrap justify-center gap-2">
+              {hero_section.features.map((feature, index) => (
+                <Badge key={index} variant="secondary" className="px-3 py-1 text-sm">
+                  {feature}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Templates Section */}
+        <section id="templates" className="py-20 bg-muted/30">
+          <div className="container">
+            <h2 className="text-center font-headline text-3xl font-bold">
+              {templates_section.heading}
+            </h2>
+            <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6">
+              {templates_section.templates.map((template) => (
+                <div
+                  key={template.name}
+                  className="group relative overflow-hidden rounded-lg border bg-card shadow-sm transition-transform hover:scale-105"
+                >
+                  <Image
+                    src={`https://picsum.photos/seed/${template.name}/600/800`}
+                    alt={`${template.name} resume template`}
+                    width={600}
+                    height={800}
+                    className="object-cover object-top"
+                    data-ai-hint={`${template.name} resume`}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                  <div className="absolute bottom-0 left-0 p-4">
+                    <h3 className="font-semibold text-lg text-white">
+                      {template.name}
+                    </h3>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section id="faq" className="py-20">
+          <div className="container max-w-4xl">
+            <h2 className="text-center font-headline text-3xl font-bold">
+              {faq_section.heading}
+            </h2>
+            <Accordion type="single" collapsible className="mt-10 w-full">
+              {faq_section.questions.map((item, index) => (
+                <AccordionItem key={index} value={`item-${index}`}>
+                  <AccordionTrigger className="text-left font-semibold text-lg">
+                    {item.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground text-base">
+                    {item.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </section>
+
+        {/* About Developer Section */}
+        <section id="about" className="py-20 bg-muted/30">
+          <div className="container max-w-4xl text-center">
+            <h2 className="font-headline text-3xl font-bold">
+              {about_developer_section.heading}
+            </h2>
+            <div className="mt-8 rounded-lg border bg-card p-8 shadow-sm">
+              <h3 className="font-headline text-2xl font-semibold">
+                {about_developer_section.developer.name}
+              </h3>
+              <p className="mt-4 text-muted-foreground">
+                {about_developer_section.developer.bio}
+              </p>
+              <div className="mt-6 flex flex-wrap justify-center gap-4">
+                {about_developer_section.contact_links.map((link) => (
+                  <Button key={link.label} variant="outline" asChild>
+                    <a href={link.url} target="_blank" rel="noopener noreferrer">
+                      <link.icon className="mr-2 h-4 w-4" />
+                      {link.label}
+                    </a>
+                  </Button>
+                ))}
+                 <Button variant="outline" asChild>
+                    <a href={about_developer_section.developer.resume_pdf_url} target="_blank" rel="noopener noreferrer">
+                      <FileText className="mr-2 h-4 w-4" />
+                      Resume
+                    </a>
+                  </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t">
+        <div className="container flex h-16 items-center justify-center">
+          <p className="text-sm text-muted-foreground">
+            {footer.copyright}
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
 }
