@@ -1,10 +1,8 @@
 # CVScriptly AI
 
-![CVScriptly AI Screenshot](https://raw.githubusercontent.com/RushendraNuthi/CVScriptly-AI/main/public/og-image.png)
-
 CVScriptly AI is an open-source, privacy-first resume builder that leverages generative AI to help you create professional, ATS-friendly resumes with ease. This tool is designed for job seekers who want to craft a compelling resume smarter and faster, without compromising on privacy.
 
-The project is live at: [cvscriptly.com](https://cvscriptly.com/)
+The project is live at: [cvscriptly-ai.netlify.app](https://cvscriptly-ai.netlify.app/)
 
 ## ✨ Features
 
