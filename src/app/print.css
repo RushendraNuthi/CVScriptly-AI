@@ -1,0 +1,33 @@
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  body * {
+    visibility: hidden;
+  }
+
+  #resume-preview-content,
+  #resume-preview-content * {
+    visibility: visible;
+  }
+
+  #resume-preview-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    overflow: hidden;
+  }
+  
+  @page {
+    size: A4;
+    margin: 20mm;
+  }
+}
