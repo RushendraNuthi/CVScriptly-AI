@@ -96,46 +96,6 @@ export function DesignForm({ data, onUpdate }: DesignFormProps) {
       <Card>
         <CardHeader><CardTitle>Customize</CardTitle></CardHeader>
         <CardContent className="space-y-6">
-          <Controller
-            control={form.control}
-            name="fontFamily"
-            render={({ field }) => (
-              <div className="space-y-2">
-                <Label>Font Family</Label>
-                <Select onValueChange={(value) => { field.onChange(value); handleUpdate(form.getValues()); }} value={field.value}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a font" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {fontFamilies.map(font => <SelectItem key={font} value={font}>{font}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-          />
-
-          <Controller
-            control={form.control}
-            name="fontSize"
-            render={({ field }) => (
-              <div className="space-y-2">
-                <Label>Font Size</Label>
-                <RadioGroup
-                  onValueChange={(value) => { field.onChange(value); handleUpdate(form.getValues()); }}
-                  value={field.value}
-                  className="flex gap-4"
-                >
-                  {fontSizes.map(size => (
-                    <div key={size.value} className="flex items-center space-x-2">
-                      <RadioGroupItem value={size.value} id={`fs-${size.value}`} />
-                      <Label htmlFor={`fs-${size.value}`}>{size.label}</Label>
-                    </div>
-                  ))}
-                </RadioGroup>
-              </div>
-            )}
-          />
-          
            <Controller
             control={form.control}
             name="primaryColor"
