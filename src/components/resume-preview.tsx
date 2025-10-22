@@ -3,6 +3,7 @@
 import type { ResumeData } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
 import { Mail, Phone, Linkedin, Globe, MapPin } from 'lucide-react';
+import { CSSProperties } from 'react';
 
 type ResumePreviewProps = {
   data: ResumeData | null;
@@ -11,8 +12,8 @@ type ResumePreviewProps = {
 
 export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewProps) {
   const previewClass = isMobilePreview 
-    ? "w-full text-sm"
-    : "sticky top-20 h-fit max-h-[calc(100vh-6rem)] w-full overflow-y-auto rounded-lg bg-card shadow-sm lg:block hidden text-sm";
+    ? "w-full"
+    : "sticky top-20 h-fit max-h-[calc(100vh-6rem)] w-full overflow-y-auto rounded-lg bg-card shadow-sm lg:block hidden";
 
   if (!data) {
     return (
@@ -24,14 +25,30 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
     );
   }
 
-  const { personalInfo, summary, experience, education, skills, projects, certifications } = data;
+  const { personalInfo, summary, experience, education, skills, projects, certifications, design } = data;
+
+  const dynamicStyles = {
+    '--preview-font-family': design.fontFamily,
+    '--preview-font-size': design.fontSize,
+    '--preview-primary-color': design.primaryColor,
+  } as CSSProperties;
+  
+  const textClass = `text-[var(--preview-font-size)]`;
 
   return (
     <aside
       id="resume-preview-content"
       className={previewClass}
+      style={dynamicStyles}
     >
-      <div className="p-8 md:p-12">
+      <div className={`p-8 md:p-12 font-[var(--preview-font-family)] ${textClass}`}>
+        <style>
+          {`
+            #resume-preview-content .text-primary { color: hsl(var(--preview-primary-color)); }
+            #resume-preview-content .border-primary\\/20 { border-color: hsl(var(--preview-primary-color) / 0.2); }
+            #resume-preview-content .hover\\:text-primary:hover { color: hsl(var(--preview-primary-color)); }
+          `}
+        </style>
         <header className="text-center mb-6">
           <h2 className="font-headline text-3xl md:text-4xl font-bold text-primary tracking-tight">
             {personalInfo.name || 'Your Name'}

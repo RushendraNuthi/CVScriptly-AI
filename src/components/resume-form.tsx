@@ -17,6 +17,7 @@ import { CertificationsForm } from '@/components/form/certifications-form';
 import { KeywordSuggester } from '@/components/keyword-suggester';
 import { ResumePreview } from '@/components/resume-preview';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { DesignForm } from './form/design-form';
 
 type ResumeFormProps = {
   data: ResumeData;
@@ -36,6 +37,7 @@ export function ResumeForm({ data, onUpdate }: ResumeFormProps) {
             <TabsTrigger value="skills">Skills</TabsTrigger>
             <TabsTrigger value="projects">Projects</TabsTrigger>
             <TabsTrigger value="certifications">Certs</TabsTrigger>
+            <TabsTrigger value="design">Design</TabsTrigger>
             <TabsTrigger value="tools">Tools</TabsTrigger>
             <TabsTrigger value="preview" className="lg:hidden">Preview</TabsTrigger>
           </TabsList>
@@ -63,6 +65,9 @@ export function ResumeForm({ data, onUpdate }: ResumeFormProps) {
           </TabsContent>
           <TabsContent value="certifications">
             <CertificationsForm data={data} onUpdate={onUpdate} />
+          </TabsContent>
+          <TabsContent value="design">
+            <DesignForm data={data} onUpdate={onUpdate} />
           </TabsContent>
           <TabsContent value="tools">
             <KeywordSuggester />

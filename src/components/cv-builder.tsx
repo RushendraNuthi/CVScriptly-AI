@@ -22,6 +22,11 @@ const initialData: ResumeData = {
   skills: [],
   projects: [],
   certifications: [],
+  design: {
+    fontFamily: 'PT Sans',
+    fontSize: '11px',
+    primaryColor: '30 45% 216',
+  }
 };
 
 export default function CVBuilder() {
@@ -32,7 +37,12 @@ export default function CVBuilder() {
     try {
       const item = window.sessionStorage.getItem('cvscriptly-data');
       if (item) {
-        setData(JSON.parse(item));
+        const savedData = JSON.parse(item);
+        // Ensure projects and certifications are arrays, even if not present in saved data
+        savedData.projects = savedData.projects || [];
+        savedData.certifications = savedData.certifications || [];
+        savedData.design = savedData.design || initialData.design;
+        setData(savedData);
       }
     } catch (error) {
       console.warn('Could not parse resume data from session storage', error);

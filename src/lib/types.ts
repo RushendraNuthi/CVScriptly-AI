@@ -42,6 +42,12 @@ export interface Certification {
   date: string;
 }
 
+export type Design = {
+  fontFamily: string;
+  fontSize: string;
+  primaryColor: string;
+};
+
 export interface ResumeData {
   personalInfo: PersonalInfo;
   summary: string;
@@ -50,4 +56,5 @@ export interface ResumeData {
   skills: string[];
   projects: Project[];
   certifications: Certification[];
+  design: Design;
 }
