@@ -17,10 +17,10 @@ export const metadata: Metadata = {
     siteName: 'CVScriptly AI',
     images: [
       {
-        url: faviconDataUri,
-        width: 480,
-        height: 480,
-        alt: 'CVScriptly AI Logo',
+        url: 'https://cvscriptly-ai.netlify.app/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'CVScriptly AI - AI-Powered Resume Builder',
       },
     ],
     locale: 'en_US',
@@ -31,7 +31,10 @@ export const metadata: Metadata = {
     title: 'CVScriptly AI - Free AI-Powered Resume Builder',
     description: 'Build professional, ATS-optimized resumes for free with AI-powered suggestions. Open-source and privacy-focused.',
     creator: '@Rushendra_Nuthi',
-    images: [faviconDataUri],
+    images: ['https://cvscriptly-ai.netlify.app/og-image.png'],
+  },
+  icons: {
+    icon: faviconDataUri,
   },
 };
 
@@ -49,7 +52,6 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=PT+Sans:wght@400;700&display=swap"
           rel="stylesheet"
         />
-        <link rel="icon" href={faviconDataUri} />
       </head>
       <body className="font-body antialiased">
         {children}

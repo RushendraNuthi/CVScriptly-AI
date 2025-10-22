@@ -8,8 +8,8 @@ import {
 } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Github, Linkedin, Mail, FileText, Globe } from 'lucide-react';
-import { Logo, ProfileAvatar } from '@/components/icons';
+import { ArrowRight, Github, Linkedin, Mail, Globe } from 'lucide-react';
+import { Logo } from '@/components/icons';
 import Image from 'next/image';
 
 const homepageData = {
@@ -114,7 +114,7 @@ const homepageData = {
     ],
   },
   footer: {
-    copyright: '© 2025 CVScriptly AI. All Rights Reserved.',
+    copyright: `© ${new Date().getFullYear()} CVScriptly AI. All Rights Reserved.`,
     repo_url: 'https://github.com/RushendraNuthi/CVScriptly-AI',
   },
 };
