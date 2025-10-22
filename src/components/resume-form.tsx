@@ -16,6 +16,7 @@ import { ProjectsForm } from '@/components/form/projects-form';
 import { CertificationsForm } from '@/components/form/certifications-form';
 import { KeywordSuggester } from '@/components/keyword-suggester';
 import { ResumePreview } from '@/components/resume-preview';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 type ResumeFormProps = {
   data: ResumeData;
@@ -26,17 +27,20 @@ export function ResumeForm({ data, onUpdate }: ResumeFormProps) {
   return (
     <section>
       <Tabs defaultValue="personal" className="w-full">
-        <TabsList className="grid w-full grid-cols-5 md:grid-cols-9 mb-4 h-auto">
-          <TabsTrigger value="personal">Personal</TabsTrigger>
-          <TabsTrigger value="summary">Summary</TabsTrigger>
-          <TabsTrigger value="experience">Experience</TabsTrigger>
-          <TabsTrigger value="education">Education</TabsTrigger>
-          <TabsTrigger value="skills">Skills</TabsTrigger>
-          <TabsTrigger value="projects">Projects</TabsTrigger>
-          <TabsTrigger value="certifications">Certs</TabsTrigger>
-          <TabsTrigger value="tools">Tools</TabsTrigger>
-          <TabsTrigger value="preview" className="lg:hidden">Preview</TabsTrigger>
-        </TabsList>
+        <ScrollArea className="w-full">
+          <TabsList className="mb-4">
+            <TabsTrigger value="personal">Personal</TabsTrigger>
+            <TabsTrigger value="summary">Summary</TabsTrigger>
+            <TabsTrigger value="experience">Experience</TabsTrigger>
+            <TabsTrigger value="education">Education</TabsTrigger>
+            <TabsTrigger value="skills">Skills</TabsTrigger>
+            <TabsTrigger value="projects">Projects</TabsTrigger>
+            <TabsTrigger value="certifications">Certs</TabsTrigger>
+            <TabsTrigger value="tools">Tools</TabsTrigger>
+            <TabsTrigger value="preview" className="lg:hidden">Preview</TabsTrigger>
+          </TabsList>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
 
         <div className="p-0.5">
           <TabsContent value="personal">
