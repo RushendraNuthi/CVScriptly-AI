@@ -22,6 +22,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=PT+Sans:wght@400;700&display=swap"
           rel="stylesheet"
         />
+        <link rel="icon" href="https://static.wixstatic.com/media/17a144_a3d8f247bcd84be9829c1d40cd013958~mv2.png/v1/fill/w_480,h_480,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/17a144_a3d8f247bcd84be9829c1d40cd013958~mv2.png" />
       </head>
       <body className="font-body antialiased">
         {children}

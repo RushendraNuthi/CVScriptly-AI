@@ -37,7 +37,7 @@ const homepageData = {
     heading: 'Explore Modern Resume Templates',
     templates: [
       { name: 'Modern', image: 'https://raw.githubusercontent.com/RushendraNuthi/CVScriptly-AI/main/public/templates/modern.png' },
-      { name: 'Creative', image: 'https://raw.githubusercontent.com/RushendraNuthi/CVScriptly-AI/main/public/templates/creative.png' },
+      { name: 'Creative', image: 'https://static.wixstatic.com/media/17a144_a3d8f247bcd84be9829c1d40cd013958~mv2.png/v1/fill/w_480,h_480,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/17a144_a3d8f247bcd84be9829c1d40cd013958~mv2.png' },
       { name: 'Minimalist', image: 'https://raw.githubusercontent.com/RushendraNuthi/CVScriptly-AI/main/public/templates/minimalist.png' },
       { name: 'Professional', image: 'https://raw.githubusercontent.com/RushendraNuthi/CVScriptly-AI/main/public/templates/professional.png' },
     ],
