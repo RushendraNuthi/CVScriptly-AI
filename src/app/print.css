@@ -23,11 +23,28 @@
     padding: 0;
     border: none;
     box-shadow: none;
-    overflow: hidden;
+    overflow: visible;
   }
   
   @page {
     size: A4;
     margin: 20mm;
+  }
+
+  /* Avoid breaking inside these elements */
+  #resume-preview-content section,
+  #resume-preview-content .mb-4,
+  #resume-preview-content .mb-3 {
+    page-break-inside: avoid;
+  }
+
+  /* Avoid breaking after a section title */
+  #resume-preview-content h3 {
+    page-break-after: avoid;
+  }
+
+  /* Avoid breaking before a list */
+  #resume-preview-content ul {
+    page-break-before: avoid;
   }
 }
