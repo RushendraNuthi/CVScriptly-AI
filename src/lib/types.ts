@@ -27,10 +27,27 @@ export interface Experience {
   bulletPoints: string[];
 }
 
+export interface Project {
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  bulletPoints: string[];
+}
+
+export interface Certification {
+  id: string;
+  name: string;
+  issuer: string;
+  date: string;
+}
+
 export interface ResumeData {
   personalInfo: PersonalInfo;
   summary: string;
   experience: Experience[];
   education: Education[];
   skills: string[];
+  projects: Project[];
+  certifications: Certification[];
 }

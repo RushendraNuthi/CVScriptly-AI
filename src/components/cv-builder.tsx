@@ -20,6 +20,8 @@ const initialData: ResumeData = {
   experience: [],
   education: [],
   skills: [],
+  projects: [],
+  certifications: [],
 };
 
 export default function CVBuilder() {

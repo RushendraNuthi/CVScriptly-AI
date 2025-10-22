@@ -24,7 +24,7 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
     );
   }
 
-  const { personalInfo, summary, experience, education, skills } = data;
+  const { personalInfo, summary, experience, education, skills, projects, certifications } = data;
 
   return (
     <aside
@@ -99,6 +99,28 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
           </section>
         )}
 
+        {projects.length > 0 && (
+          <section className="mb-6">
+            <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
+              Projects
+            </h3>
+            {projects.map((proj) => (
+              <div key={proj.id} className="mb-4">
+                <div className="flex justify-between items-baseline">
+                  <h4 className="font-bold text-base">{proj.name || "Project Name"}</h4>
+                  {proj.url && <a href={proj.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground text-xs hover:text-primary">View Project</a>}
+                </div>
+                <ul className="mt-1 list-disc list-inside text-foreground/80 space-y-1">
+                  {proj.bulletPoints.map((point, index) => (
+                    <li key={index}>{point}</li>
+                  ))}
+                  {proj.description && proj.bulletPoints.length === 0 && <li>{proj.description}</li>}
+                </ul>
+              </div>
+            ))}
+          </section>
+        )}
+
         {education.length > 0 && (
           <section className="mb-6">
             <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
@@ -114,6 +136,23 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
                 </div>
                 <p className="text-muted-foreground">{edu.degree || "Degree"} in {edu.fieldOfStudy || "Field of Study"}</p>
                  {edu.gpa && <p className="text-muted-foreground text-xs">GPA: {edu.gpa}</p>}
+              </div>
+            ))}
+          </section>
+        )}
+        
+        {certifications.length > 0 && (
+          <section className="mb-6">
+            <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
+              Certifications
+            </h3>
+            {certifications.map((cert) => (
+              <div key={cert.id} className="mb-3">
+                <div className="flex justify-between items-baseline flex-wrap">
+                  <h4 className="font-bold text-base">{cert.name || "Certification Name"}</h4>
+                  <span className="text-muted-foreground text-xs shrink-0">{cert.date || 'Date'}</span>
+                </div>
+                <p className="text-muted-foreground">{cert.issuer || "Issuer"}</p>
               </div>
             ))}
           </section>
