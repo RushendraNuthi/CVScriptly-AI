@@ -237,8 +237,14 @@ export default function Home() {
               {about_developer_section.heading}
             </h2>
             <div className="mt-8 rounded-lg border bg-card p-8 shadow-sm flex flex-col items-center">
-              <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center mb-4">
-                <ProfileAvatar className="w-16 h-16 text-muted-foreground" />
+              <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center mb-4 overflow-hidden">
+                <Image
+                  src="https://raw.githubusercontent.com/RushendraNuthi/RushendraNuthi/main/profile.svg"
+                  alt="Rushendra Nuthi"
+                  width={96}
+                  height={96}
+                  className="object-cover"
+                />
               </div>
               <h3 className="font-headline text-2xl font-semibold">
                 {about_developer_section.developer.name}
@@ -284,5 +290,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
