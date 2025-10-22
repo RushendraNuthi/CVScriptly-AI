@@ -6,6 +6,7 @@ import { Header } from '@/components/header';
 import { ResumeForm } from '@/components/resume-form';
 import { ResumePreview } from '@/components/resume-preview';
 import { Skeleton } from '@/components/ui/skeleton';
+import { templates } from '@/components/form/design-form';
 
 const initialData: ResumeData = {
   personalInfo: {
@@ -22,11 +23,7 @@ const initialData: ResumeData = {
   skills: [],
   projects: [],
   certifications: [],
-  design: {
-    fontFamily: 'PT Sans',
-    fontSize: '11px',
-    primaryColor: '30 45% 216',
-  }
+  design: templates[0].design,
 };
 
 export default function CVBuilder() {

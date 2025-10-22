@@ -3,7 +3,7 @@
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import type { ResumeData } from '@/lib/types';
+import type { ResumeData, Design } from '@/lib/types';
 import {
   Select,
   SelectContent,
@@ -14,8 +14,10 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { cn } from '@/lib/utils';
 
 const designSchema = z.object({
+  template: z.string(),
   fontFamily: z.string(),
   fontSize: z.string(),
   primaryColor: z.string(),
@@ -25,6 +27,12 @@ type DesignFormProps = {
   data: ResumeData;
   onUpdate: (data: Partial<ResumeData>) => void;
 };
+
+export const templates: { name: string, design: Design }[] = [
+  { name: 'Classic', design: { template: 'classic', fontFamily: 'PT Sans', fontSize: '11px', primaryColor: '216 45% 30%' } },
+  { name: 'Modern', design: { template: 'modern', fontFamily: 'Poppins', fontSize: '10px', primaryColor: '210 14% 23%' } },
+  { name: 'Creative', design: { template: 'creative', fontFamily: 'Verdana', fontSize: '11px', primaryColor: '15 79% 55%' } },
+];
 
 const fontFamilies = [
   'PT Sans', 'Poppins', 'Verdana', 'Georgia', 'Garamond', 'Times New Roman'
@@ -52,11 +60,41 @@ export function DesignForm({ data, onUpdate }: DesignFormProps) {
   const handleUpdate = (values: z.infer<typeof designSchema>) => {
     onUpdate({ design: values });
   };
+
+  const handleTemplateChange = (templateName: string) => {
+    const selectedTemplate = templates.find(t => t.name === templateName);
+    if (selectedTemplate) {
+      form.reset(selectedTemplate.design);
+      handleUpdate(selectedTemplate.design);
+    }
+  }
   
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader><CardTitle>Font</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Template</CardTitle></CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {templates.map(template => (
+              <button
+                key={template.name}
+                type="button"
+                onClick={() => handleTemplateChange(template.name)}
+                className={cn(
+                  'p-2 border-2 rounded-lg text-center aspect-square flex flex-col justify-center items-center gap-2',
+                  data.design.template === template.design.template ? 'border-primary bg-primary/10' : 'hover:border-primary/50'
+                )}
+              >
+                <div className="w-10 h-10 rounded-full" style={{backgroundColor: `hsl(${template.design.primaryColor})`}}></div>
+                <p className="font-semibold" style={{fontFamily: template.design.fontFamily}}>{template.name}</p>
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card>
+        <CardHeader><CardTitle>Customize</CardTitle></CardHeader>
         <CardContent className="space-y-6">
           <Controller
             control={form.control}
@@ -64,7 +102,7 @@ export function DesignForm({ data, onUpdate }: DesignFormProps) {
             render={({ field }) => (
               <div className="space-y-2">
                 <Label>Font Family</Label>
-                <Select onValueChange={(value) => { field.onChange(value); handleUpdate(form.getValues()); }} defaultValue={field.value}>
+                <Select onValueChange={(value) => { field.onChange(value); handleUpdate(form.getValues()); }} value={field.value}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a font" />
                   </SelectTrigger>
@@ -84,7 +122,7 @@ export function DesignForm({ data, onUpdate }: DesignFormProps) {
                 <Label>Font Size</Label>
                 <RadioGroup
                   onValueChange={(value) => { field.onChange(value); handleUpdate(form.getValues()); }}
-                  defaultValue={field.value}
+                  value={field.value}
                   className="flex gap-4"
                 >
                   {fontSizes.map(size => (
@@ -97,12 +135,7 @@ export function DesignForm({ data, onUpdate }: DesignFormProps) {
               </div>
             )}
           />
-        </CardContent>
-      </Card>
-      
-      <Card>
-        <CardHeader><CardTitle>Color</CardTitle></CardHeader>
-        <CardContent>
+          
            <Controller
             control={form.control}
             name="primaryColor"

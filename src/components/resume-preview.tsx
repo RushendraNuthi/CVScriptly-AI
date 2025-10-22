@@ -4,6 +4,7 @@ import type { ResumeData } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
 import { Mail, Phone, Linkedin, Globe, MapPin } from 'lucide-react';
 import { CSSProperties } from 'react';
+import { cn } from '@/lib/utils';
 
 type ResumePreviewProps = {
   data: ResumeData | null;
@@ -35,6 +36,29 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
   
   const textClass = `text-[var(--preview-font-size)]`;
 
+  const templateClasses = {
+    classic: {
+      header: 'text-center mb-6',
+      name: 'font-headline text-3xl md:text-4xl font-bold text-primary tracking-tight',
+      sectionTitle: 'font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2',
+      jobTitle: 'font-bold text-base',
+    },
+    modern: {
+      header: 'text-left mb-8 pb-4 border-b-2 border-primary',
+      name: 'font-headline text-4xl md:text-5xl font-bold text-primary tracking-tighter',
+      sectionTitle: 'font-headline text-base font-bold text-primary tracking-widest uppercase mb-3',
+      jobTitle: 'font-semibold text-base text-primary',
+    },
+    creative: {
+      header: 'text-center mb-8 relative',
+      name: 'font-headline text-3xl md:text-4xl font-bold text-primary tracking-wide',
+      sectionTitle: 'font-headline text-lg font-bold text-primary pb-1 mb-3',
+      jobTitle: 'font-bold text-base',
+    },
+  };
+
+  const currentTemplate = templateClasses[data.design.template as keyof typeof templateClasses] || templateClasses.classic;
+
   return (
     <aside
       id="resume-preview-content"
@@ -45,15 +69,25 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
         <style>
           {`
             #resume-preview-content .text-primary { color: hsl(var(--preview-primary-color)); }
+            #resume-preview-content .border-primary { border-color: hsl(var(--preview-primary-color)); }
             #resume-preview-content .border-primary\\/20 { border-color: hsl(var(--preview-primary-color) / 0.2); }
             #resume-preview-content .hover\\:text-primary:hover { color: hsl(var(--preview-primary-color)); }
+            ${design.template === 'creative' ? `
+              #resume-preview-content .creative-section-title::after { 
+                content: ''; 
+                display: block; 
+                width: 40px; 
+                height: 2px; 
+                background-color: hsl(var(--preview-primary-color)); 
+                margin-top: 4px;
+              }` : ''}
           `}
         </style>
-        <header className="text-center mb-6">
-          <h2 className="font-headline text-3xl md:text-4xl font-bold text-primary tracking-tight">
+        <header className={currentTemplate.header}>
+          <h2 className={currentTemplate.name}>
             {personalInfo.name || 'Your Name'}
           </h2>
-          <div className="flex justify-center items-center flex-wrap gap-x-4 gap-y-1 text-muted-foreground mt-2 text-xs md:text-sm">
+           <div className={cn("flex justify-center items-center flex-wrap gap-x-4 gap-y-1 text-muted-foreground mt-2 text-xs md:text-sm", { 'justify-start': design.template === 'modern'})}>
             {personalInfo.location && (
               <span className="flex items-center gap-1.5">
                 <MapPin size={12} /> {personalInfo.location}
@@ -84,7 +118,7 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
 
         {summary && (
           <section className="mb-6">
-            <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
+            <h3 className={cn(currentTemplate.sectionTitle, {'creative-section-title': design.template === 'creative'})}>
               Professional Summary
             </h3>
             <p className="text-foreground/80">{summary}</p>
@@ -93,13 +127,13 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
 
         {experience?.length > 0 && (
           <section className="mb-6">
-            <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
+            <h3 className={cn(currentTemplate.sectionTitle, {'creative-section-title': design.template === 'creative'})}>
               Work Experience
             </h3>
             {experience.map((exp) => (
               <div key={exp.id} className="mb-4">
                 <div className="flex justify-between items-baseline flex-wrap">
-                  <h4 className="font-bold text-base">{exp.role || "Role"}</h4>
+                  <h4 className={currentTemplate.jobTitle}>{exp.role || "Role"}</h4>
                   <span className="text-muted-foreground text-xs shrink-0">
                     {exp.startDate || 'Start Date'} - {exp.endDate || 'End Date'}
                   </span>
@@ -118,13 +152,13 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
 
         {projects?.length > 0 && (
           <section className="mb-6">
-            <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
+             <h3 className={cn(currentTemplate.sectionTitle, {'creative-section-title': design.template === 'creative'})}>
               Projects
             </h3>
             {projects.map((proj) => (
               <div key={proj.id} className="mb-4">
                 <div className="flex justify-between items-baseline">
-                  <h4 className="font-bold text-base">{proj.name || "Project Name"}</h4>
+                  <h4 className={currentTemplate.jobTitle}>{proj.name || "Project Name"}</h4>
                   {proj.url && <a href={proj.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground text-xs hover:text-primary">View Project</a>}
                 </div>
                 <ul className="mt-1 list-disc list-inside text-foreground/80 space-y-1">
@@ -140,7 +174,7 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
 
         {education?.length > 0 && (
           <section className="mb-6">
-            <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
+             <h3 className={cn(currentTemplate.sectionTitle, {'creative-section-title': design.template === 'creative'})}>
               Education
             </h3>
             {education.map((edu) => (
@@ -160,7 +194,7 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
         
         {certifications?.length > 0 && (
           <section className="mb-6">
-            <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
+             <h3 className={cn(currentTemplate.sectionTitle, {'creative-section-title': design.template === 'creative'})}>
               Certifications
             </h3>
             {certifications.map((cert) => (
@@ -177,7 +211,7 @@ export function ResumePreview({ data, isMobilePreview = false }: ResumePreviewPr
 
         {skills?.length > 0 && (
           <section>
-            <h3 className="font-headline text-lg font-semibold text-primary border-b-2 border-primary/20 pb-1 mb-2">
+             <h3 className={cn(currentTemplate.sectionTitle, {'creative-section-title': design.template === 'creative'})}>
               Skills
             </h3>
             <div className="flex flex-wrap gap-x-2 gap-y-1">

@@ -43,6 +43,7 @@ export interface Certification {
 }
 
 export type Design = {
+  template: string;
   fontFamily: string;
   fontSize: string;
   primaryColor: string;
