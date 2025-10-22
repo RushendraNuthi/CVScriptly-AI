@@ -188,14 +188,14 @@ export default function Home() {
               {templates_section.templates.map((template) => (
                 <div
                   key={template.name}
-                  className="group relative overflow-hidden rounded-lg border bg-card shadow-sm transition-transform hover:scale-105"
+                  className="group relative overflow-hidden rounded-lg border bg-card shadow-sm transition-transform duration-300 hover:scale-105"
                 >
                   <Image
                     src={template.image}
                     alt={`${template.name} resume template`}
                     width={600}
                     height={800}
-                    className="object-cover object-top"
+                    className="object-cover object-top transition-transform duration-300 group-hover:rotate-3"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                   <div className="absolute bottom-0 left-0 p-4">
@@ -218,7 +218,7 @@ export default function Home() {
             <Accordion type="single" collapsible className="mt-10 w-full">
               {faq_section.questions.map((item, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
-                  <AccordionTrigger className="text-left font-semibold text-lg">
+                  <AccordionTrigger className="text-left font-semibold text-lg hover:no-underline">
                     {item.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-muted-foreground text-base">
