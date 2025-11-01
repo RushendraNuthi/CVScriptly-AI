@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI-Powered ATS-Optimized Resume Builder</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="A modern, secure, AI-powered ATS compliant resume builder with PDF download and LaTeX template customization.">
+    <meta name="keywords" content="ATS resume, resume builder, PDF resume, modern LaTeX, AI resume, job application, secure resume tool, customizable CV">
+    <meta property="og:title" content="ATS-Optimized Resume Builder">
+    <meta property="og:description" content="Generate ATS-compliant, fully customizable resumes with the power of AI and LaTeX.">
+    <meta property="og:type" content="website">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: { // Brand Primary Blue: #007BFF
+                '50': '#e6f2ff',
+                '100': '#cce4ff',
+                '200': '#99c9ff',
+                '300': '#66adff',
+                '400': '#3392ff',
+                '500': '#007bff',
+                '600': '#006ae6',
+                '700': '#0058bf',
+                '800': '#004599',
+                '900': '#003270',
+                '950': '#00234d'
+              },
+              neutral: { // Light backgrounds, borders, and dark text
+                '50': '#F8F8F8',   // Light Background White
+                '100': '#f3f3f3',
+                '200': '#e8e8e8',
+                '300': '#E0E0E0',   // Subtle Grey Accent
+                '400': '#c7c7c7',
+                '500': '#aeaeae',
+                '600': '#959595',
+                '700': '#7c7c7c',
+                '800': '#626262',
+                '900': '#333333',   // Dark Text Grey
+                '950': '#1a1a1a'
+              },
+              success: { // Success Green: #28A745
+                '100': '#eaf6ec',
+                '500': '#28A745',
+                '700': '#208637'
+              },
+              danger: { // Danger Red: #DC3545
+                '100': '#fcedee',
+                '500': '#DC3545',
+                '700': '#b52b39',
+                '800': '#9a2431'
+              },
+              white: '#FFFFFF',
+              black: '#000000',
+            }
+          }
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.27.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-neutral-50 text-neutral-900">
+    <div id="root"></div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+      // Make jsPDF available on the window object for our generator utility
+      if (window.jspdf) {
+        window.jsPDF = window.jspdf.jsPDF;
+      }
+    </script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
