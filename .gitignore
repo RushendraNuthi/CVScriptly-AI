@@ -12,6 +12,15 @@ build/
 out/
 .vite/
 
+# Public assets (keep static assets)
+!public/
+!public/**/*.png
+!public/**/*.svg
+!public/**/*.jpg
+!public/**/*.jpeg
+!public/**/*.gif
+!public/**/*.ico
+
 # Environment variables
 .env
 .env.local

@@ -7,11 +7,10 @@ declare global {
 }
 
 // Spacing constants for a polished layout
-const PAGE_MARGIN = 72; // 1 inch
-const SECTION_SPACING = 16;
-const HEADING_SPACING = 4;
-const SUBHEADING_SPACING = 2;
-const LIST_ITEM_SPACING = 2;
+const PAGE_MARGIN = 72; // 1 inch (72 points)
+const SECTION_SPACING = 18;
+const ITEM_SPACING = 12;
+const HEADING_SPACING = 6;
 const LIST_INDENT = 20;
 
 const getPdfFontFamily = (family: string): string => {
@@ -85,31 +84,40 @@ export const generatePdfBlob = (data: ResumeData): Blob => {
   };
 
   const renderSectionTitle = (title: string) => {
-    checkPageBreak(styling.sectionTitle.size + HEADING_SPACING * 3);
+    checkPageBreak(styling.sectionTitle.size + HEADING_SPACING * 4);
     applyFontStyle(doc, styling.sectionTitle);
+    const titleDim = doc.getTextDimensions(title);
     doc.text(title, PAGE_MARGIN, y);
-    y += doc.getTextDimensions(title).h + HEADING_SPACING;
+    y += titleDim.h + HEADING_SPACING;
     doc.setLineWidth(0.75);
     doc.setDrawColor(styling.sectionTitle.color);
     doc.line(PAGE_MARGIN, y, PAGE_WIDTH - PAGE_MARGIN, y);
-    y += HEADING_SPACING * 2;
+    y += HEADING_SPACING * 3;
   };
   
-  // --- RENDER SECTIONS ---
-
-  // Header
+  // --- HEADER ---
   applyFontStyle(doc, styling.heading);
+  const nameDim = doc.getTextDimensions(personalDetails.name);
   doc.text(personalDetails.name, PAGE_WIDTH / 2, y, { align: 'center' });
-  y += doc.getTextDimensions(personalDetails.name).h + HEADING_SPACING;
+  y += nameDim.h + HEADING_SPACING * 2;
 
   applyFontStyle(doc, styling.font);
   doc.setFontSize(styling.font.size * 0.9);
-  const contactInfo = [
-    personalDetails.location, personalDetails.email, personalDetails.phone,
-    personalDetails.website, personalDetails.linkedin, personalDetails.github
-  ].filter(Boolean).join(' | ');
-  addWrappedText(contactInfo, 0, PAGE_WIDTH, { align: 'center' });
-  y += HEADING_SPACING;
+  const contactParts = [
+    personalDetails.location,
+    personalDetails.email,
+    personalDetails.phone,
+    personalDetails.website,
+    personalDetails.linkedin,
+    personalDetails.github
+  ].filter(Boolean);
+  
+  if (contactParts.length > 0) {
+    const contactInfo = contactParts.join(' | ');
+    addWrappedText(contactInfo, 0, PAGE_WIDTH, { align: 'center' });
+    y += HEADING_SPACING * 2;
+  }
+  
   doc.setDrawColor(styling.font.color);
   doc.setLineWidth(0.5);
   doc.line(PAGE_MARGIN, y, PAGE_WIDTH - PAGE_MARGIN, y);
@@ -129,147 +137,180 @@ export const generatePdfBlob = (data: ResumeData): Blob => {
       if (items.length === 0) return;
       renderSectionTitle('Experience');
       items.forEach(exp => {
-        const highlightsCount = exp.highlights ? exp.highlights.filter(h => h).length : 0;
-        checkPageBreak(styling.subheading.size + highlightsCount * styling.font.size * 2);
+        checkPageBreak(styling.subheading.size * 2);
+        
+        // Role, Company, Location on one line, Date on the right
         applyFontStyle(doc, styling.subheading);
-        const date = `${exp.startDate}${exp.endDate ? ` — ${exp.endDate}` : ' — Present'}`;
-        const roleAndCompany = `${exp.role}${exp.company ? `, ${exp.company}`: ''}`;
-        doc.text(roleAndCompany, PAGE_MARGIN, y);
-        applyFontStyle(doc, {...styling.subheading, weight: 'normal'});
-        doc.text(date, PAGE_WIDTH - PAGE_MARGIN, y, { align: 'right' });
-        y += doc.getTextDimensions(roleAndCompany).h;
+        const roleText = exp.role;
+        const companyText = exp.company ? `, ${exp.company}` : '';
+        const locationText = exp.location ? ` -- ${exp.location}` : '';
+        const dateText = `${exp.startDate}${exp.endDate ? ` - ${exp.endDate}` : ''}`;
         
-        if (exp.location) {
-          applyFontStyle(doc, styling.font);
-          doc.setFont(getPdfFontFamily(styling.font.family), 'italic');
-          doc.text(exp.location, PAGE_MARGIN, y);
-          y += doc.getTextDimensions(exp.location).h + SUBHEADING_SPACING * 2;
+        const leftPart = `${roleText}${companyText}${locationText}`;
+        const leftWidth = doc.getTextWidth(leftPart);
+        const dateWidth = doc.getTextWidth(dateText);
+        
+        // Check if they fit on one line
+        if (leftWidth + dateWidth + 20 < CONTENT_WIDTH) {
+          doc.text(leftPart, PAGE_MARGIN, y);
+          doc.text(dateText, PAGE_WIDTH - PAGE_MARGIN, y, { align: 'right' });
+          y += doc.getTextDimensions(leftPart).h;
+        } else {
+          // Multi-line layout
+          doc.text(leftPart, PAGE_MARGIN, y);
+          y += doc.getTextDimensions(leftPart).h;
+          applyFontStyle(doc, {...styling.font, size: styling.font.size * 0.9});
+          doc.text(dateText, PAGE_MARGIN, y);
+          y += doc.getTextDimensions(dateText).h;
         }
+        y += ITEM_SPACING;
         
+        // Highlights
         if (exp.highlights && exp.highlights.filter(h => h).length > 0) {
           applyFontStyle(doc, styling.font);
           exp.highlights.filter(h => h).forEach(h => {
             addWrappedText(h, PAGE_MARGIN, CONTENT_WIDTH, { isListItem: true, indent: LIST_INDENT });
-            y += LIST_ITEM_SPACING;
+            y += 4;
           });
         }
-        y += HEADING_SPACING * 2;
+        y += ITEM_SPACING;
       });
     },
+    
     education: () => {
       const items = sectionsData.education.filter(e => e.university);
       if (items.length === 0) return;
       renderSectionTitle('Education');
       items.forEach(edu => {
-        checkPageBreak(styling.subheading.size * 3);
+        checkPageBreak(styling.subheading.size * 2);
+        
         applyFontStyle(doc, styling.subheading);
-        const date = `${edu.startDate}${edu.endDate ? ` — ${edu.endDate}` : ' — Present'}`;
-        doc.text(edu.university, PAGE_MARGIN, y);
-        applyFontStyle(doc, {...styling.subheading, weight: 'normal'});
-        doc.text(date, PAGE_WIDTH - PAGE_MARGIN, y, { align: 'right' });
-        y += doc.getTextDimensions(edu.university).h;
+        const universityText = edu.university;
+        const degreeText = edu.degree ? `, ${edu.degree}` : '';
+        const dateText = `${edu.startDate}${edu.endDate ? ` - ${edu.endDate}` : ''}`;
         
-        if (edu.degree) {
+        const leftPart = `${universityText}${degreeText}`;
+        const leftWidth = doc.getTextWidth(leftPart);
+        const dateWidth = doc.getTextWidth(dateText);
+        
+        // Check if they fit on one line
+        if (leftWidth + dateWidth + 20 < CONTENT_WIDTH) {
+          doc.text(leftPart, PAGE_MARGIN, y);
+          doc.text(dateText, PAGE_WIDTH - PAGE_MARGIN, y, { align: 'right' });
+          y += doc.getTextDimensions(leftPart).h;
+        } else {
+          doc.text(leftPart, PAGE_MARGIN, y);
+          y += doc.getTextDimensions(leftPart).h;
+          applyFontStyle(doc, {...styling.font, size: styling.font.size * 0.9});
+          doc.text(dateText, PAGE_MARGIN, y);
+          y += doc.getTextDimensions(dateText).h;
+        }
+        y += ITEM_SPACING / 2;
+        
+        // GPA and Coursework
+        if ((edu.gpa || (edu.coursework && edu.coursework.filter(c => c).length > 0))) {
           applyFontStyle(doc, styling.font);
-          doc.setFont(getPdfFontFamily(styling.font.family), 'italic');
-          doc.text(edu.degree, PAGE_MARGIN, y);
-          y += doc.getTextDimensions(edu.degree).h + SUBHEADING_SPACING * 2;
+          if (edu.gpa) {
+            addWrappedText(`GPA: ${edu.gpa}`, PAGE_MARGIN, CONTENT_WIDTH, { isListItem: true, indent: LIST_INDENT });
+            y += 4;
+          }
+          if (edu.coursework && edu.coursework.filter(c => c).length > 0) {
+            addWrappedText(`Coursework: ${edu.coursework.filter(c => c).join(', ')}`, PAGE_MARGIN, CONTENT_WIDTH, { isListItem: true, indent: LIST_INDENT });
+            y += 4;
+          }
         }
-        
-        applyFontStyle(doc, styling.font);
-        const details = [];
-        if (edu.gpa) details.push(`GPA: ${edu.gpa}`);
-        if (edu.coursework && edu.coursework.filter(c => c).length > 0) {
-          details.push(`Coursework: ${edu.coursework.filter(c => c).join(', ')}`);
-        }
-        
-        if (details.length > 0) {
-          details.forEach(detail => {
-              addWrappedText(detail, PAGE_MARGIN, CONTENT_WIDTH, { isListItem: true, indent: LIST_INDENT });
-          });
-        }
-        y += HEADING_SPACING * 2;
+        y += ITEM_SPACING / 2;
       });
     },
+    
     projects: () => {
       const items = sectionsData.projects.filter(p => p.name);
       if (items.length === 0) return;
       renderSectionTitle('Projects');
       items.forEach(proj => {
-          checkPageBreak(styling.subheading.size * 3);
-          applyFontStyle(doc, styling.subheading);
-          
-          const urlText = proj.url || '';
-          const urlWidth = urlText ? doc.getTextWidth(urlText) : 0;
-          const availableWidthForName = CONTENT_WIDTH - urlWidth - 10;
-          const nameLines = doc.splitTextToSize(proj.name, availableWidthForName);
-          
-          doc.text(nameLines[0], PAGE_MARGIN, y);
-
-          if (proj.url) {
-            const url = `https://${proj.url.replace(/^https?:\/\//, '')}`;
-            applyFontStyle(doc, {...styling.font, color: '#007BFF', weight: 'normal'});
-            doc.setFontSize(styling.font.size * 0.9);
-            doc.textWithLink(proj.url, PAGE_WIDTH - PAGE_MARGIN, y, { url, align: 'right' });
+        checkPageBreak(styling.subheading.size * 2);
+        
+        applyFontStyle(doc, styling.subheading);
+        const nameText = proj.name;
+        const urlText = proj.url || '';
+        
+        const nameWidth = doc.getTextWidth(nameText);
+        const urlWidth = urlText ? doc.getTextWidth(urlText) : 0;
+        
+        // Check if they fit on one line
+        if (nameWidth + urlWidth + 20 < CONTENT_WIDTH) {
+          doc.text(nameText, PAGE_MARGIN, y);
+          if (urlText) {
+            const url = `https://${urlText.replace(/^https?:\/\//, '')}`;
+            applyFontStyle(doc, {...styling.font, size: styling.font.size * 0.9, color: '#007BFF'});
+            doc.textWithLink(urlText, PAGE_WIDTH - PAGE_MARGIN, y, { url, align: 'right' });
           }
-
-          y += doc.getTextDimensions(nameLines[0]).h;
-          
-          applyFontStyle(doc, styling.subheading);
-          for (let i = 1; i < nameLines.length; i++) {
-              checkPageBreak(doc.getLineHeight() * styling.lineHeight);
-              doc.text(nameLines[i], PAGE_MARGIN, y);
-              y += doc.getLineHeight() * styling.lineHeight;
+          y += doc.getTextDimensions(nameText).h;
+        } else {
+          // Multi-line layout
+          doc.text(nameText, PAGE_MARGIN, y);
+          y += doc.getTextDimensions(nameText).h;
+          if (urlText) {
+            const url = `https://${urlText.replace(/^https?:\/\//, '')}`;
+            applyFontStyle(doc, {...styling.font, size: styling.font.size * 0.9, color: '#007BFF'});
+            doc.textWithLink(urlText, PAGE_MARGIN, y, { url });
+            y += doc.getTextDimensions(urlText).h;
           }
-          y += SUBHEADING_SPACING;
-
+        }
+        y += ITEM_SPACING / 2;
+        
+        // Description and Tools
+        if (proj.description || (proj.tools && proj.tools.filter(t => t).length > 0)) {
           applyFontStyle(doc, styling.font);
-          const details = [];
-          if (proj.description) details.push(proj.description);
+          if (proj.description) {
+            addWrappedText(proj.description, PAGE_MARGIN, CONTENT_WIDTH, { isListItem: true, indent: LIST_INDENT });
+            y += 4;
+          }
           if (proj.tools && proj.tools.filter(t => t).length > 0) {
-            details.push(`Tools Used: ${proj.tools.filter(t => t).join(', ')}`);
+            addWrappedText(`Tools Used: ${proj.tools.filter(t => t).join(', ')}`, PAGE_MARGIN, CONTENT_WIDTH, { isListItem: true, indent: LIST_INDENT });
+            y += 4;
           }
-
-          if (details.length > 0) {
-            details.forEach(detail => {
-               addWrappedText(detail, PAGE_MARGIN, CONTENT_WIDTH, { isListItem: true, indent: LIST_INDENT });
-            });
-          }
-          y += HEADING_SPACING * 2;
+        }
+        y += ITEM_SPACING / 2;
       });
     },
+    
     skills: () => {
       const items = sectionsData.skills.filter(s => s.skills.filter(i => i).length > 0);
       if (items.length === 0) return;
       renderSectionTitle('Skills');
       items.forEach(skillGroup => {
-          checkPageBreak(styling.font.size * 2);
-          const skillsText = skillGroup.skills.filter(s => s).join(', ');
-          if (skillGroup.category) {
-              const categoryText = `${skillGroup.category}: `;
-              applyFontStyle(doc, {...styling.font, weight: 'bold'});
-              const categoryWidth = doc.getTextWidth(categoryText);
-              const remainingWidth = CONTENT_WIDTH - categoryWidth;
-              const skillLines = doc.splitTextToSize(skillsText, remainingWidth);
+        checkPageBreak(styling.font.size * 2);
+        const skillsText = skillGroup.skills.filter(s => s).join(', ');
+        
+        if (skillGroup.category) {
+          const categoryText = `${skillGroup.category}: `;
+          applyFontStyle(doc, {...styling.font, weight: 'bold'});
+          const categoryWidth = doc.getTextWidth(categoryText);
+          
+          checkPageBreak(doc.getLineHeight() * styling.lineHeight);
+          doc.text(categoryText, PAGE_MARGIN, y);
+          
+          applyFontStyle(doc, styling.font);
+          const remainingWidth = CONTENT_WIDTH - categoryWidth;
+          const skillLines = doc.splitTextToSize(skillsText, remainingWidth);
+          
+          doc.text(skillLines[0] || '', PAGE_MARGIN + categoryWidth, y);
+          y += doc.getLineHeight() * styling.lineHeight;
 
-              checkPageBreak(doc.getLineHeight() * styling.lineHeight);
-              doc.text(categoryText, PAGE_MARGIN, y);
-              applyFontStyle(doc, styling.font);
-              doc.text(skillLines[0] || '', PAGE_MARGIN + categoryWidth, y);
-              y += doc.getLineHeight() * styling.lineHeight;
-
-              for (let i = 1; i < skillLines.length; i++) {
-                  checkPageBreak(doc.getLineHeight() * styling.lineHeight);
-                  doc.text(skillLines[i], PAGE_MARGIN + categoryWidth, y);
-                  y += doc.getLineHeight() * styling.lineHeight;
-              }
-          } else {
-              applyFontStyle(doc, styling.font);
-              addWrappedText(skillsText, PAGE_MARGIN, CONTENT_WIDTH);
+          for (let i = 1; i < skillLines.length; i++) {
+            checkPageBreak(doc.getLineHeight() * styling.lineHeight);
+            doc.text(skillLines[i], PAGE_MARGIN + categoryWidth, y);
+            y += doc.getLineHeight() * styling.lineHeight;
           }
+        } else {
+          applyFontStyle(doc, styling.font);
+          addWrappedText(skillsText, PAGE_MARGIN, CONTENT_WIDTH);
+        }
+        y += 6;
       });
-       y += SECTION_SPACING;
     },
+    
     customSections: () => {
       const items = sectionsData.customSections.filter(s => s.title && s.content.some(c => c));
       if (items.length === 0) return;
@@ -278,9 +319,9 @@ export const generatePdfBlob = (data: ResumeData): Blob => {
         applyFontStyle(doc, styling.font);
         section.content.filter(c => c).forEach(c => {
           addWrappedText(c, PAGE_MARGIN, CONTENT_WIDTH, { isListItem: true, indent: LIST_INDENT });
-          y += LIST_ITEM_SPACING;
+          y += 4;
         });
-        y += HEADING_SPACING * 2;
+        y += SECTION_SPACING;
       });
     },
   };

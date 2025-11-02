@@ -114,15 +114,14 @@ ${fontFamilyCommand}
 `;
 };
 
-
 const generateHeader = (details: ResumeData['personalDetails'], styling: StylingOptions): string => {
   const links = [
     details.location,
     `\\hrefWithoutArrow{mailto:${details.email}}{${escapeLatex(details.email)}}`,
     `\\hrefWithoutArrow{tel:${details.phone.replace(/\s+/g, '')}}{${escapeLatex(details.phone)}}`,
-    details.website ? `\\hrefWithoutArrow{https://${details.website}}{${escapeLatex(details.website)}}` : '',
-    details.linkedin ? `\\hrefWithoutArrow{https://${details.linkedin}}{${escapeLatex(details.linkedin)}}` : '',
-    details.github ? `\\hrefWithoutArrow{https://${details.github}}{${escapeLatex(details.github)}}` : '',
+    details.website ? `\\hrefWithoutArrow{https://${details.website.replace(/^https?:\/\//, '')}}{${escapeLatex(details.website)}}` : '',
+    details.linkedin ? `\\hrefWithoutArrow{https://${details.linkedin.replace(/^https?:\/\//, '')}}{${escapeLatex(details.linkedin)}}` : '',
+    details.github ? `\\hrefWithoutArrow{https://${details.github.replace(/^https?:\/\//, '')}}{${escapeLatex(details.github)}}` : '',
   ].filter(Boolean).join('%\\kern 5.0 pt%\\AND%\\kern 5.0 pt%');
 
   return `
@@ -149,19 +148,26 @@ const generateExperience = (experience: ResumeData['experience'], styling: Styli
   const entries = experience.map(exp => {
     const roleText = escapeLatex(exp.role);
     const styledRole = styling.subheading.weight === 'bold' ? `\\textbf{${roleText}}` : roleText;
+    const companyText = exp.company ? `, ${escapeLatex(exp.company)}` : '';
+    const locationText = exp.location ? ` -- ${escapeLatex(exp.location)}` : '';
+    const dateText = `${escapeLatex(exp.startDate)} - ${exp.endDate ? escapeLatex(exp.endDate) : ''}`;
+    
+    const highlights = exp.highlights
+      .filter(h => h)
+      .map(h => `\\item ${escapeLatex(h)}`)
+      .join('\n                ');
+    
+    const highlightsContent = highlights 
+      ? `\\begin{onecolentry}\\begin{highlights}\n${highlights}\n\\end{highlights}\\end{onecolentry}` 
+      : '';
     
     return `
         \\begin{twocolentry}{
-            ${escapeLatex(exp.startDate)} -- ${escapeLatex(exp.endDate)}
+            ${dateText}
         }
-            {\\fontsize{${styling.subheading.size}pt}{${styling.subheading.size}pt}\\selectfont\\color{subheadingColor}${styledRole}}{, ${escapeLatex(exp.company)}} -- ${escapeLatex(exp.location)}\\end{twocolentry}
+            {\\fontsize{${styling.subheading.size}pt}{${styling.subheading.size}pt}\\selectfont\\color{subheadingColor}${styledRole}\\textnormal{\\fontsize{${styling.font.size}pt}{${styling.font.size}pt}\\selectfont\\color{bodyColor}${companyText}${locationText}}}\\end{twocolentry}
 
-        \\vspace{0.10 cm}
-        \\begin{onecolentry}
-            \\begin{highlights}
-                ${exp.highlights.map(h => `\\item ${escapeLatex(h)}`).join('\n                ')}
-            \\end{highlights}
-        \\end{onecolentry}
+        ${highlightsContent ? '\\vspace{0.10 cm}\n' : ''}${highlightsContent}
   `}).join('\n\n        \\vspace{0.2 cm}\n');
 
   return `
@@ -175,7 +181,8 @@ const generateEducation = (education: ResumeData['education'], styling: StylingO
   const entries = education.map(edu => {
     const uniText = escapeLatex(edu.university);
     const styledUni = styling.subheading.weight === 'bold' ? `\\textbf{${uniText}}` : uniText;
-    const dateText = `${escapeLatex(edu.startDate)} -- ${escapeLatex(edu.endDate || 'Present')}`;
+    const degreeText = edu.degree ? `, ${escapeLatex(edu.degree)}` : '';
+    const dateText = `${escapeLatex(edu.startDate)} - ${edu.endDate ? escapeLatex(edu.endDate) : ''}`;
     
     const highlights = [];
     if (edu.gpa) highlights.push(`\\item GPA: ${escapeLatex(edu.gpa)}`);
@@ -187,11 +194,11 @@ const generateEducation = (education: ResumeData['education'], styling: StylingO
       ? `\\begin{onecolentry}\\begin{highlights}\n${highlights.join('\n')}\n\\end{highlights}\\end{onecolentry}` 
       : '';
     
-      return `
+    return `
         \\begin{twocolentry}{
             ${dateText}
         }
-           {\\fontsize{${styling.subheading.size}pt}{${styling.subheading.size}pt}\\selectfont\\color{subheadingColor} ${styledUni}}{, ${escapeLatex(edu.degree)}}\\end{twocolentry}
+            {\\fontsize{${styling.subheading.size}pt}{${styling.subheading.size}pt}\\selectfont\\color{subheadingColor} ${styledUni}\\textnormal{\\fontsize{${styling.font.size}pt}{${styling.font.size}pt}\\selectfont\\color{bodyColor}${degreeText}}}\\end{twocolentry}
 
         ${highlightsContent ? '\\vspace{0.10 cm}\n' : ''}${highlightsContent}
   `}).join('\n\n        \\vspace{0.2 cm}\n');
@@ -208,7 +215,9 @@ const generateProjects = (projects: ResumeData['projects'], styling: StylingOpti
     const nameText = escapeLatex(proj.name);
     const styledName = styling.subheading.weight === 'bold' ? `\\textbf{${nameText}}` : nameText;
     
-    const urlText = proj.url ? `\\href{https://${proj.url.replace(/^https?:\/\//, '')}}{${escapeLatex(proj.url)}}` : '';
+    const urlText = proj.url 
+      ? `\\href{https://${proj.url.replace(/^https?:\/\//, '')}}{${escapeLatex(proj.url)}}` 
+      : '';
     
     const highlights = [];
     if (proj.description) highlights.push(`\\item ${escapeLatex(proj.description)}`);
@@ -239,14 +248,22 @@ const generateCustomSections = (sections: CustomSection[]): string => {
   if (sections.length === 0) return '';
   return sections
     .filter(sec => sec.title && sec.content.some(c => c))
-    .map(section => `
+    .map(section => {
+      const contentItems = section.content
+        .filter(item => item)
+        .map(item => `\\item ${escapeLatex(item)}`)
+        .join('\n                ');
+      
+      return `
     \\section{${escapeLatex(section.title)}}
     \\begin{onecolentry}
         \\begin{highlights}
-            ${section.content.map(item => `\\item ${escapeLatex(item)}`).join('\n                ')}
+            ${contentItems}
         \\end{highlights}
     \\end{onecolentry}
-  `).join('\n');
+  `;
+    })
+    .join('\n\n        \\vspace{0.2 cm}\n');
 };
 
 const generateSkills = (skills: Skill[]): string => {

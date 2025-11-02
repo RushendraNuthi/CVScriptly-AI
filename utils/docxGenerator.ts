@@ -20,12 +20,10 @@ const loadDocxLibrary = async (retries = 3, delay = 100): Promise<void> => {
         return;
     }
 
-    // The script is now loaded via index.html. If it's not here, it failed to load.
     return Promise.reject(new Error(
         'The required library for .docx generation failed to load. Please check your network connection and disable any ad-blockers that might be interfering.'
     ));
 };
-
 
 export const generateDocxBlob = async (data: ResumeData): Promise<Blob> => {
     await loadDocxLibrary();
@@ -51,13 +49,13 @@ export const generateDocxBlob = async (data: ResumeData): Promise<Blob> => {
                     quickFormat: true,
                     run: {
                         font: data.styling.heading.family,
-                        size: data.styling.heading.size * 2, // docx uses half-points
+                        size: data.styling.heading.size * 2,
                         color: hexToRgb(data.styling.heading.color),
                         bold: data.styling.heading.weight === 'bold',
                     },
                     paragraph: {
                         alignment: AlignmentType.CENTER,
-                        spacing: { after: 120 },
+                        spacing: { after: 240 },
                     },
                 },
                 {
@@ -73,7 +71,7 @@ export const generateDocxBlob = async (data: ResumeData): Promise<Blob> => {
                         bold: data.styling.sectionTitle.weight === 'bold',
                     },
                     paragraph: {
-                        spacing: { before: 240, after: 120 },
+                        spacing: { before: 320, after: 180 },
                         border: {
                             bottom: {
                                 color: "auto",
@@ -97,10 +95,10 @@ export const generateDocxBlob = async (data: ResumeData): Promise<Blob> => {
                         bold: data.styling.subheading.weight === 'bold',
                     },
                     paragraph: {
-                        spacing: { after: 60 },
+                        spacing: { after: 80 },
                     },
                 },
-                 {
+                {
                     id: 'body',
                     name: 'Body',
                     basedOn: 'Normal',
@@ -149,24 +147,29 @@ export const generateDocxBlob = async (data: ResumeData): Promise<Blob> => {
         text: data.personalDetails.name,
         style: 'heading'
     }));
-    const contactInfo = [
+    
+    const contactParts = [
         data.personalDetails.location,
         data.personalDetails.email,
         data.personalDetails.phone,
         data.personalDetails.website,
         data.personalDetails.linkedin,
         data.personalDetails.github
-    ].filter(Boolean).join(' | ');
-    children.push(new Paragraph({
-        text: contactInfo,
-        alignment: AlignmentType.CENTER,
-        style: 'body'
-    }));
+    ].filter(Boolean);
+    
+    if (contactParts.length > 0) {
+        children.push(new Paragraph({
+            text: contactParts.join(' | '),
+            alignment: AlignmentType.CENTER,
+            style: 'body',
+            paragraph: { spacing: { after: 320 } }
+        }));
+    }
 
     // Summary
     if(data.summary) {
         children.push(new Paragraph({ text: 'Summary', style: 'sectionTitle' }));
-        children.push(new Paragraph({ text: data.summary, style: 'body' }));
+        children.push(new Paragraph({ text: data.summary, style: 'body', paragraph: { spacing: { after: 240 } } }));
     }
 
     const generateExperience = () => {
@@ -175,32 +178,51 @@ export const generateDocxBlob = async (data: ResumeData): Promise<Blob> => {
             sectionChildren.push(new Paragraph({ text: 'Experience', style: 'sectionTitle' }));
             data.experience.forEach(exp => {
                 if (!exp.role) return;
+                
+                const dateText = `${exp.startDate}${exp.endDate ? ` - ${exp.endDate}` : ''}`;
+                
                 sectionChildren.push(new Paragraph({
                     children: [
-                        new TextRun({ text: exp.role }),
-                        new TextRun(exp.company ? `, ${exp.company}` : ''),
-                        new TextRun({
-                            text: `\t${exp.startDate}${exp.endDate ? ` - ${exp.endDate}` : ' - Present'}`,
+                        new TextRun({ 
+                            text: exp.role,
+                            font: data.styling.subheading.family,
+                            size: data.styling.subheading.size * 2,
+                            color: hexToRgb(data.styling.subheading.color),
+                            bold: data.styling.subheading.weight === 'bold',
+                        }),
+                        new TextRun({ 
+                            text: exp.company ? `, ${exp.company}` : '',
+                            font: data.styling.font.family,
+                            size: data.styling.font.size * 2,
+                            color: hexToRgb(data.styling.font.color),
+                            bold: false,
+                        }),
+                        new TextRun({ 
+                            text: exp.location ? ` -- ${exp.location}` : '',
+                            font: data.styling.font.family,
+                            size: data.styling.font.size * 2,
+                            color: hexToRgb(data.styling.font.color),
+                            bold: false,
+                        }),
+                        new TextRun({ 
+                            text: `\t${dateText}`,
                         }),
                     ],
-                    style: 'subheading',
                     tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
+                    paragraph: { spacing: { after: 80 } },
                 }));
-                if (exp.location) {
-                    sectionChildren.push(new Paragraph({
-                        text: exp.location,
-                        style: 'body',
-                        paragraph: {
-                            spacing: { after: 60 }
-                        }
-                    }));
-                }
-                if (exp.highlights && exp.highlights.length > 0) {
+                
+                if (exp.highlights && exp.highlights.filter(h => h).length > 0) {
                     exp.highlights.forEach(h => {
-                        if (h) sectionChildren.push(new Paragraph({ text: h, numbering: { reference: 'bullet-points', level: 0 }, style: 'body' }));
+                        if (h) sectionChildren.push(new Paragraph({ 
+                            text: h, 
+                            numbering: { reference: 'bullet-points', level: 0 }, 
+                            style: 'body',
+                            paragraph: { spacing: { after: 80 } }
+                        }));
                     });
                 }
-                sectionChildren.push(new Paragraph({})); // Spacer
+                sectionChildren.push(new Paragraph({ paragraph: { spacing: { after: 120 } } }));
             });
         }
         return sectionChildren;
@@ -211,25 +233,53 @@ export const generateDocxBlob = async (data: ResumeData): Promise<Blob> => {
         if (data.education.length > 0 && data.education.some(e => e.university)) {
             sectionChildren.push(new Paragraph({ text: 'Education', style: 'sectionTitle' }));
             data.education.forEach(edu => {
-                 if (!edu.university) return;
-                 sectionChildren.push(new Paragraph({
+                if (!edu.university) return;
+                
+                const dateText = `${edu.startDate}${edu.endDate ? ` - ${edu.endDate}` : ''}`;
+                
+                sectionChildren.push(new Paragraph({
                     children: [
-                        new TextRun({ text: edu.university }),
-                        new TextRun(edu.degree ? `, ${edu.degree}` : ''),
-                        new TextRun({
-                            text: `\t${edu.startDate}${edu.endDate ? ` - ${edu.endDate}` : ' - Present'}`,
+                        new TextRun({ 
+                            text: edu.university,
+                            font: data.styling.subheading.family,
+                            size: data.styling.subheading.size * 2,
+                            color: hexToRgb(data.styling.subheading.color),
+                            bold: data.styling.subheading.weight === 'bold',
+                        }),
+                        new TextRun({ 
+                            text: edu.degree ? `, ${edu.degree}` : '',
+                            font: data.styling.font.family,
+                            size: data.styling.font.size * 2,
+                            color: hexToRgb(data.styling.font.color),
+                            bold: false,
+                        }),
+                        new TextRun({ 
+                            text: `\t${dateText}`,
                         }),
                     ],
-                    style: 'subheading',
                     tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
+                    paragraph: { spacing: { after: 80 } },
                 }));
+                
                 if (edu.gpa) {
-                     sectionChildren.push(new Paragraph({ text: `GPA: ${edu.gpa}`, numbering: { reference: 'bullet-points', level: 0 }, style: 'body' }));
+                    sectionChildren.push(new Paragraph({ 
+                        text: `GPA: ${edu.gpa}`, 
+                        numbering: { reference: 'bullet-points', level: 0 }, 
+                        style: 'body',
+                        paragraph: { spacing: { after: 80 } }
+                    }));
                 }
-                 if (edu.coursework && edu.coursework.length > 0 && edu.coursework.some(c=>c)) {
-                     sectionChildren.push(new Paragraph({ text: `Coursework: ${edu.coursework.filter(c=>c).join(', ')}`, numbering: { reference: 'bullet-points', level: 0 }, style: 'body' }));
+                
+                if (edu.coursework && edu.coursework.length > 0 && edu.coursework.some(c=>c)) {
+                    sectionChildren.push(new Paragraph({ 
+                        text: `Coursework: ${edu.coursework.filter(c=>c).join(', ')}`, 
+                        numbering: { reference: 'bullet-points', level: 0 }, 
+                        style: 'body',
+                        paragraph: { spacing: { after: 80 } }
+                    }));
                 }
-                sectionChildren.push(new Paragraph({})); // Spacer
+                
+                sectionChildren.push(new Paragraph({ paragraph: { spacing: { after: 120 } } }));
             });
         }
         return sectionChildren;
@@ -241,18 +291,37 @@ export const generateDocxBlob = async (data: ResumeData): Promise<Blob> => {
             sectionChildren.push(new Paragraph({ text: 'Projects', style: 'sectionTitle' }));
             data.projects.forEach(proj => {
                 if (!proj.name) return;
-                const children: any[] = [new TextRun({ text: proj.name })];
+                
+                const childrenArr: any[] = [new TextRun({ text: proj.name })];
                 if (proj.url) {
-                    children.push(new TextRun({ text: `\t${proj.url}`, style: 'Hyperlink' }));
+                    childrenArr.push(new TextRun({ text: `\t${proj.url}` }));
                 }
+                
                 sectionChildren.push(new Paragraph({
-                    children,
+                    children: childrenArr,
                     style: 'subheading',
-                     tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
+                    tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
                 }));
-                if(proj.description) sectionChildren.push(new Paragraph({ text: proj.description, numbering: { reference: 'bullet-points', level: 0 }, style: 'body' }));
-                if(proj.tools && proj.tools.length > 0 && proj.tools.some(t=>t)) sectionChildren.push(new Paragraph({ text: `Tools Used: ${proj.tools.filter(t=>t).join(', ')}`, numbering: { reference: 'bullet-points', level: 0 }, style: 'body' }));
-                sectionChildren.push(new Paragraph({})); // Spacer
+                
+                if(proj.description) {
+                    sectionChildren.push(new Paragraph({ 
+                        text: proj.description, 
+                        numbering: { reference: 'bullet-points', level: 0 }, 
+                        style: 'body',
+                        paragraph: { spacing: { after: 80 } }
+                    }));
+                }
+                
+                if(proj.tools && proj.tools.length > 0 && proj.tools.some(t=>t)) {
+                    sectionChildren.push(new Paragraph({ 
+                        text: `Tools Used: ${proj.tools.filter(t=>t).join(', ')}`, 
+                        numbering: { reference: 'bullet-points', level: 0 }, 
+                        style: 'body',
+                        paragraph: { spacing: { after: 80 } }
+                    }));
+                }
+                
+                sectionChildren.push(new Paragraph({ paragraph: { spacing: { after: 120 } } }));
             });
         }
         return sectionChildren;
@@ -264,9 +333,14 @@ export const generateDocxBlob = async (data: ResumeData): Promise<Blob> => {
             if (section.title) {
                 sectionChildren.push(new Paragraph({ text: section.title, style: 'sectionTitle' }));
                 section.content.forEach(item => {
-                    if (item) sectionChildren.push(new Paragraph({ text: item, numbering: { reference: 'bullet-points', level: 0 }, style: 'body' }));
+                    if (item) sectionChildren.push(new Paragraph({ 
+                        text: item, 
+                        numbering: { reference: 'bullet-points', level: 0 }, 
+                        style: 'body',
+                        paragraph: { spacing: { after: 80 } }
+                    }));
                 });
-                sectionChildren.push(new Paragraph({})); // Spacer
+                sectionChildren.push(new Paragraph({ paragraph: { spacing: { after: 120 } } }));
             }
         });
         return sectionChildren;
@@ -283,7 +357,8 @@ export const generateDocxBlob = async (data: ResumeData): Promise<Blob> => {
                             new TextRun({ text: skillGroup.category ? `${skillGroup.category}: ` : '', bold: true }),
                             new TextRun(skillGroup.skills.filter(s=>s).join(', ')),
                         ],
-                        style: 'body'
+                        style: 'body',
+                        paragraph: { spacing: { after: 120 } }
                     }));
                 }
             });
