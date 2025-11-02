@@ -3,9 +3,6 @@
   publish = "dist"
   environment = { NODE_VERSION = "18" }
 
-[build.environment]
-  NODE_VERSION = "18"
-
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -94,5 +91,5 @@
 
 # Environment variables can be set here (but prefer Netlify UI for secrets)
 # [context.production.environment]
-#   GEMINI_API_KEY = "your-production-key"
+#   GEMINI_API_KEY = "your_api_key_here"
 
