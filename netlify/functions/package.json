@@ -1,0 +1,11 @@
+{
+  "name": "cvscriptly-ai-functions",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@google/genai": "^1.27.0"
+  },
+  "devDependencies": {
+    "@netlify/functions": "^2.6.0"
+  }
+}
