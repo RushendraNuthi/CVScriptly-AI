@@ -1,12 +1,5 @@
 # CVScriptly-AI: AI-Powered ATS Resume Builder
 
-<div align="center">
-<img width="600" height="238" alt="CVScriptly-AI Logo" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/your-badge-id/deploy-status)](https://app.netlify.com)
-
 **Create professional, ATS-compliant resumes in minutes** with AI assistance. Export to PDF, DOCX, or LaTeX formats. Built with React, TypeScript, and powered by Google Gemini AI.
 
 ## ✨ Features
