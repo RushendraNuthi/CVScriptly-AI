@@ -3,80 +3,80 @@ import type { Handler } from "@netlify/functions";
 
 // --- START of copied types from ../../types.ts ---
 interface PersonalDetails {
-  name: string;
-  location: string;
-  email: string;
-  phone: string;
-  website: string;
-  linkedin: string;
-  github: string;
+    name: string;
+    location: string;
+    email: string;
+    phone: string;
+    website: string;
+    linkedin: string;
+    github: string;
 }
 
 interface Education {
-  id: string;
-  university: string;
-  degree: string;
-  startDate: string;
-  endDate: string;
-  gpa: string;
-  coursework: string[];
+    id: string;
+    university: string;
+    degree: string;
+    startDate: string;
+    endDate: string;
+    gpa: string;
+    coursework: string[];
 }
 
 interface Experience {
-  id:string;
-  role: string;
-  company: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  highlights: string[];
+    id: string;
+    role: string;
+    company: string;
+    location: string;
+    startDate: string;
+    endDate: string;
+    highlights: string[];
 }
 
 interface Project {
-  id: string;
-  name: string;
-  url: string;
-  description: string;
-  tools: string[];
+    id: string;
+    name: string;
+    url: string;
+    description: string;
+    tools: string[];
 }
 
 interface CustomSection {
-  id: string;
-  title: string;
-  content: string[];
+    id: string;
+    title: string;
+    content: string[];
 }
 
 interface Skill {
-  id: string;
-  category: string;
-  skills: string[];
+    id: string;
+    category: string;
+    skills: string[];
 }
 
 interface FontStyle {
-  family: string;
-  size: number; // in points (pt)
-  color: string; // hex code
-  weight: 'normal' | 'bold';
+    family: string;
+    size: number; // in points (pt)
+    color: string; // hex code
+    weight: 'normal' | 'bold';
 }
 
 interface StylingOptions {
-  font: FontStyle; // Default/Body
-  heading: FontStyle; // Name
-  subheading: FontStyle; // Role, University name
-  sectionTitle: FontStyle; // "Experience", "Education"
-  lineHeight: number; // e.g., 1.15 for 115%
+    font: FontStyle; // Default/Body
+    heading: FontStyle; // Name
+    subheading: FontStyle; // Role, University name
+    sectionTitle: FontStyle; // "Experience", "Education"
+    lineHeight: number; // e.g., 1.15 for 115%
 }
 
 interface ResumeData {
-  personalDetails: PersonalDetails;
-  summary: string;
-  education: Education[];
-  experience: Experience[];
-  projects: Project[];
-  customSections: CustomSection[];
-  skills: Skill[];
-  sectionOrder: string[];
-  styling: StylingOptions;
+    personalDetails: PersonalDetails;
+    summary: string;
+    education: Education[];
+    experience: Experience[];
+    projects: Project[];
+    customSections: CustomSection[];
+    skills: Skill[];
+    sectionOrder: string[];
+    styling: StylingOptions;
 }
 
 interface AIFeedback {
@@ -95,7 +95,7 @@ const handler: Handler = async (event) => {
     if (!GEMINI_API_KEY) {
         return { statusCode: 500, body: JSON.stringify({ error: 'Gemini API key is not configured on the server.' }) };
     }
-    
+
     const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
     try {
@@ -165,6 +165,28 @@ const handler: Handler = async (event) => {
                 return {
                     statusCode: 200,
                     body: jsonText,
+                    headers: { 'Content-Type': 'application/json' }
+                };
+            }
+
+            case 'improveText': {
+                const { text, context } = JSON.parse(event.body || '{}');
+                if (!text) {
+                    return { statusCode: 400, body: JSON.stringify({ error: 'Missing text to improve.' }) };
+                }
+                const prompt = `Improve the following resume text to be more professional, action-oriented, and impactful.
+                Context: ${context || 'General resume section'}
+                Original Text: "${text}"
+                
+                Provide only the improved text as a plain string. Do not include quotes or markdown formatting unless appropriate for the content.`;
+
+                const response = await ai.models.generateContent({
+                    model: 'gemini-2.5-flash',
+                    contents: prompt,
+                });
+                return {
+                    statusCode: 200,
+                    body: JSON.stringify({ improvedText: response.text.trim() }),
                     headers: { 'Content-Type': 'application/json' }
                 };
             }

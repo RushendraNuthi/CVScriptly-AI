@@ -19,37 +19,37 @@ interface ResumeBuilderProps {
 
 const ResumeBuilder: React.FC<ResumeBuilderProps> = ({ initialData, onPreview }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const { 
-    state: resumeData, 
-    setState: setResumeData, 
-    undo, 
-    redo, 
-    canUndo, 
-    canRedo 
+  const {
+    state: resumeData,
+    setState: setResumeData,
+    undo,
+    redo,
+    canUndo,
+    canRedo
   } = useHistoryState<ResumeData>(initialData);
   const [steps, setSteps] = useState<Array<{ id: number; name: string; key: string }>>([]);
-  
+
   useEffect(() => {
     const sectionMap: { [key: string]: string } = {
-        experience: 'Experience',
-        education: 'Education',
-        projects: 'Projects',
-        customSections: 'Add Sections',
-        skills: 'Skills',
+      experience: 'Experience',
+      education: 'Education',
+      projects: 'Projects',
+      customSections: 'Add Sections',
+      skills: 'Skills',
     };
 
     const dynamicSteps = resumeData.sectionOrder.map(key => ({
-        key,
-        name: sectionMap[key],
+      key,
+      name: sectionMap[key],
     }));
 
     const newSteps = [
-        { key: 'personalDetails', name: 'Personal Details' },
-        { key: 'summary', name: 'Summary' },
-        ...dynamicSteps,
-        { key: 'styling', name: 'Styling' }
+      { key: 'personalDetails', name: 'Personal Details' },
+      { key: 'summary', name: 'Summary' },
+      ...dynamicSteps,
+      { key: 'styling', name: 'Styling' }
     ].map((step, index) => ({ ...step, id: index + 1 }));
-    
+
     setSteps(newSteps);
   }, [resumeData.sectionOrder]);
 
@@ -66,7 +66,7 @@ const ResumeBuilder: React.FC<ResumeBuilderProps> = ({ initialData, onPreview })
       setCurrentStep(currentStep - 1);
     }
   };
-  
+
   const updateData = <K extends keyof ResumeData>(key: K, value: ResumeData[K]) => {
     setResumeData(prev => ({ ...prev, [key]: value }));
   };
@@ -95,7 +95,12 @@ const ResumeBuilder: React.FC<ResumeBuilderProps> = ({ initialData, onPreview })
       case 'skills':
         return <SkillsForm data={resumeData.skills} updateData={(val) => updateData('skills', val)} />;
       case 'styling':
-        return <StylingForm data={resumeData.styling} updateData={(val) => updateData('styling', val)} />;
+        return <StylingForm
+          data={resumeData.styling}
+          updateData={(val) => updateData('styling', val)}
+          templateId={resumeData.templateId}
+          onTemplateChange={(val) => updateData('templateId', val)}
+        />;
       default:
         return null;
     }
@@ -106,7 +111,7 @@ const ResumeBuilder: React.FC<ResumeBuilderProps> = ({ initialData, onPreview })
       {/* Left Column: Form */}
       <div className="lg:col-span-1">
         <ProgressBar steps={steps} currentStep={currentStep} onStepClick={setCurrentStep} onReorder={handleReorder} />
-        
+
         <div className="mt-8 bg-white rounded-xl shadow-2xl overflow-hidden">
           <div className="p-6 sm:p-10">
             {renderStep()}
@@ -121,24 +126,24 @@ const ResumeBuilder: React.FC<ResumeBuilderProps> = ({ initialData, onPreview })
             </button>
 
             <div className="flex items-center space-x-2">
-                <button
-                    onClick={undo}
-                    disabled={!canUndo}
-                    className="p-2 text-neutral-600 rounded-full hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    aria-label="Undo change"
-                    title="Undo"
-                >
-                    <UndoIcon />
-                </button>
-                <button
-                    onClick={redo}
-                    disabled={!canRedo}
-                    className="p-2 text-neutral-600 rounded-full hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    aria-label="Redo change"
-                    title="Redo"
-                >
-                    <RedoIcon />
-                </button>
+              <button
+                onClick={undo}
+                disabled={!canUndo}
+                className="p-2 text-neutral-600 rounded-full hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                aria-label="Undo change"
+                title="Undo"
+              >
+                <UndoIcon />
+              </button>
+              <button
+                onClick={redo}
+                disabled={!canRedo}
+                className="p-2 text-neutral-600 rounded-full hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                aria-label="Redo change"
+                title="Redo"
+              >
+                <RedoIcon />
+              </button>
             </div>
 
             <button
@@ -153,24 +158,24 @@ const ResumeBuilder: React.FC<ResumeBuilderProps> = ({ initialData, onPreview })
 
       {/* Right Column: Live Preview */}
       <div className="lg:col-span-1 hidden lg:block">
-         <div className="sticky top-8">
-            <LiveResumePreview resumeData={resumeData} />
-         </div>
+        <div className="sticky top-8">
+          <LiveResumePreview resumeData={resumeData} />
+        </div>
       </div>
     </div>
   );
 };
 
 const UndoIcon: React.FC = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v1M3 10L7 6m-4 4l4 4" />
-    </svg>
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v1M3 10L7 6m-4 4l4 4" />
+  </svg>
 );
 
 const RedoIcon: React.FC = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 10H11a8 8 0 00-8 8v1M21 10l-4-4m4 4l-4 4" />
-    </svg>
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 10H11a8 8 0 00-8 8v1M21 10l-4-4m4 4l-4 4" />
+  </svg>
 );
 
 

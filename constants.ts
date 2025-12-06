@@ -1,36 +1,36 @@
 import type { ResumeData, StylingOptions } from './types';
 
 export const themePresets: { name: string; styling: StylingOptions }[] = [
-    {
-        name: 'Default',
-        styling: {
-            font: { family: 'Helvetica', size: 10, color: '#333333', weight: 'normal' },
-            heading: { family: 'Helvetica', size: 25, color: '#333333', weight: 'bold' },
-            subheading: { family: 'Helvetica', size: 11, color: '#333333', weight: 'bold' },
-            sectionTitle: { family: 'Helvetica', size: 12, color: '#000000', weight: 'bold' },
-            lineHeight: 1.15,
-        }
-    },
-    {
-        name: 'Modern Sans',
-        styling: {
-            font: { family: 'Roboto', size: 10, color: '#404040', weight: 'normal' },
-            heading: { family: 'Roboto', size: 22, color: '#171717', weight: 'bold' },
-            subheading: { family: 'Roboto', size: 11, color: '#171717', weight: 'bold' },
-            sectionTitle: { family: 'Roboto', size: 11, color: '#007BFF', weight: 'bold' },
-            lineHeight: 1.4,
-        }
-    },
-    {
-        name: 'Classic Serif',
-        styling: {
-            font: { family: 'Times New Roman', size: 11, color: '#000000', weight: 'normal' },
-            heading: { family: 'Times New Roman', size: 28, color: '#000000', weight: 'normal' },
-            subheading: { family: 'Times New Roman', size: 12, color: '#000000', weight: 'bold' },
-            sectionTitle: { family: 'Times New Roman', size: 13, color: '#000000', weight: 'bold' },
-            lineHeight: 1.2,
-        }
+  {
+    name: 'Default',
+    styling: {
+      font: { family: 'Helvetica', size: 10, color: '#333333', weight: 'normal' },
+      heading: { family: 'Helvetica', size: 25, color: '#333333', weight: 'bold' },
+      subheading: { family: 'Helvetica', size: 11, color: '#333333', weight: 'bold' },
+      sectionTitle: { family: 'Helvetica', size: 12, color: '#000000', weight: 'bold' },
+      lineHeight: 1.15,
     }
+  },
+  {
+    name: 'Modern Sans',
+    styling: {
+      font: { family: 'Roboto', size: 10, color: '#404040', weight: 'normal' },
+      heading: { family: 'Roboto', size: 22, color: '#171717', weight: 'bold' },
+      subheading: { family: 'Roboto', size: 11, color: '#171717', weight: 'bold' },
+      sectionTitle: { family: 'Roboto', size: 11, color: '#007BFF', weight: 'bold' },
+      lineHeight: 1.4,
+    }
+  },
+  {
+    name: 'Classic Serif',
+    styling: {
+      font: { family: 'Times New Roman', size: 11, color: '#000000', weight: 'normal' },
+      heading: { family: 'Times New Roman', size: 28, color: '#000000', weight: 'normal' },
+      subheading: { family: 'Times New Roman', size: 12, color: '#000000', weight: 'bold' },
+      sectionTitle: { family: 'Times New Roman', size: 13, color: '#000000', weight: 'bold' },
+      lineHeight: 1.2,
+    }
+  }
 ];
 
 export const initialResumeData: ResumeData = {
@@ -113,4 +113,5 @@ export const initialResumeData: ResumeData = {
   ],
   sectionOrder: ['experience', 'education', 'projects', 'skills', 'customSections'],
   styling: themePresets[0].styling,
+  templateId: 'modern',
 };

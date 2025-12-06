@@ -13,12 +13,13 @@ const SkillsForm: React.FC<Props> = ({ data, updateData }) => {
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
   const handleChange = (index: number, field: keyof Skill, value: string | string[]) => {
-    const newData = [...data];
-    if (field === 'skills') {
-      newData[index][field] = Array.isArray(value) ? value : value.split(',').map(s => s.trim());
-    } else {
-      (newData[index] as any)[field] = value;
-    }
+    const newData = data.map((item, i) => {
+      if (i !== index) return item;
+      if (field === 'skills') {
+        return { ...item, [field]: Array.isArray(value) ? value : value.split(',').map(s => s.trim()) };
+      }
+      return { ...item, [field]: value };
+    });
     updateData(newData);
   };
 

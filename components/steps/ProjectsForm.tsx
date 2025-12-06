@@ -14,12 +14,13 @@ const ProjectsForm: React.FC<Props> = ({ data, updateData }) => {
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
   const handleChange = (index: number, field: keyof Project, value: string | string[]) => {
-    const newData = [...data];
-    if (field === 'tools') {
-      newData[index][field] = Array.isArray(value) ? value : value.split(',').map(s => s.trim());
-    } else {
-      (newData[index] as any)[field] = value;
-    }
+    const newData = data.map((item, i) => {
+      if (i !== index) return item;
+      if (field === 'tools') {
+        return { ...item, [field]: Array.isArray(value) ? value : value.split(',').map(s => s.trim()) };
+      }
+      return { ...item, [field]: value };
+    });
     updateData(newData);
   };
 
@@ -39,18 +40,18 @@ const ProjectsForm: React.FC<Props> = ({ data, updateData }) => {
     setIsModalOpen(false);
     setItemToDelete(null);
   };
-  
+
   const cancelDelete = () => {
-      setIsModalOpen(false);
-      setItemToDelete(null);
+    setIsModalOpen(false);
+    setItemToDelete(null);
   };
-  
+
   return (
     <div className="space-y-8">
-       <div>
-         <h2 className="text-2xl font-bold text-neutral-900">Projects</h2>
-         <p className="text-sm text-neutral-600">Showcase your personal projects to demonstrate your skills.</p>
-       </div>
+      <div>
+        <h2 className="text-2xl font-bold text-neutral-900">Projects</h2>
+        <p className="text-sm text-neutral-600">Showcase your personal projects to demonstrate your skills.</p>
+      </div>
       {data.map((proj, index) => (
         <div key={proj.id} className="p-6 border border-neutral-300 rounded-lg space-y-4 relative">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -65,9 +66,9 @@ const ProjectsForm: React.FC<Props> = ({ data, updateData }) => {
           />
           <Input label="Tools Used (comma-separated)" id={`tools-${index}`} value={proj.tools.join(', ')} onChange={(e) => handleChange(index, 'tools', e.target.value)} />
           <button onClick={() => requestDelete(index)} className="absolute top-2 right-2 text-neutral-400 hover:text-danger-500">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
           </button>
         </div>
       ))}
@@ -77,7 +78,7 @@ const ProjectsForm: React.FC<Props> = ({ data, updateData }) => {
       >
         + Add Project
       </button>
-       <ConfirmationModal
+      <ConfirmationModal
         isOpen={isModalOpen}
         onClose={cancelDelete}
         onConfirm={confirmDelete}

@@ -19,7 +19,7 @@ export interface Education {
 }
 
 export interface Experience {
-  id:string;
+  id: string;
   role: string;
   company: string;
   location: string;
@@ -73,10 +73,11 @@ export interface ResumeData {
   skills: Skill[];
   sectionOrder: string[];
   styling: StylingOptions;
+  templateId?: string; // Identifier for the selected template layout
 }
 
 export interface AIFeedback {
-    score: number;
-    suggestions: string[];
-    summary: string;
+  score: number;
+  suggestions: string[];
+  summary: string;
 }
